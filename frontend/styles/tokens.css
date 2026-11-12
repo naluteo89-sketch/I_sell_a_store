@@ -1,40 +1,64 @@
 /*
- * 디자인 토큰 (색·간격·모서리·글자 크기)
+ * 디자인 토큰 — "안개빛 + 둥근 형태"
  * 고객별 디자인을 바꿀 때는 이 파일만 고친다.
- * --brand / --accent 는 백엔드 브랜드 설정(BRAND_PRIMARY_COLOR 등)으로 layout.tsx 에서 덮어쓴다.
+ * --brand / --accent 는 백엔드 브랜드 설정으로 layout.tsx 에서 덮어쓴다.
+ *
+ * 원칙
+ *  - 직각 없음: 컨트롤은 알약형(--radius-full), 면은 20~36px 라운드
+ *  - 선 대신 면: 흰 면(--surface)이 안개빛 배경(--bg) 위에 떠 있는 구조, 테두리는 최소화
+ *  - 그림자는 글자색(슬레이트) 기반으로 아주 옅게, 두 겹
  */
 :root {
   /* 브랜드 */
-  --brand: #111827;
-  --accent: #ef4444;
+  --brand: #3d5a80;
+  --accent: #e98a95;
   --on-brand: #ffffff;
+  --brand-soft: color-mix(in srgb, var(--brand) 9%, #ffffff);
+  --brand-soft-strong: color-mix(in srgb, var(--brand) 16%, #ffffff);
+  --accent-soft: color-mix(in srgb, var(--accent) 14%, #ffffff);
+  /* 흰 아이콘·글자를 올릴 때 쓰는 진한 포인트 (대비 4.5:1 이상) */
+  --accent-strong: color-mix(in srgb, var(--accent) 60%, #3a1a1f);
 
   /* 글자 */
-  --text: #111827;
-  --text-muted: #6b7280;
-  --text-faint: #9ca3af;
+  --text: #26313a;
+  /* 명도 대비(WCAG 1.4.3): 흰색·배경 위에서 모두 4.5:1 이상 */
+  --text-muted: #56616b;
+  --text-faint: #606c77;
 
-  /* 배경·선 */
-  --bg: #ffffff;
-  --bg-soft: #f9fafb;
-  --bg-muted: #f3f4f6;
-  --border: #e5e7eb;
-  --border-strong: #9ca3af;
+  /* 면 */
+  --bg: #f4f6f8;
+  --surface: #ffffff;
+  --bg-soft: #f8fafb;
+  --bg-muted: #eceff3;
+  --border: #e3e8ed;
+  --border-strong: #c9d1d9;
 
   /* 상태 */
-  --success: #15803d;
-  --success-bg: #dcfce7;
-  --warn: #92400e;
-  --warn-bg: #fffbeb;
-  --danger: #ef4444;
+  --success: #276b4d;
+  --success-bg: #e3f3ea;
+  --warn: #8a5a12;
+  --warn-bg: #fdf4e3;
+  --danger: #b03e4a;
 
   /* 모서리 */
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --radius-2xl: 28px;
+  --radius-sm: 12px;
+  --radius: 16px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-2xl: 36px;
   --radius-full: 999px;
+
+  /* 그림자 (슬레이트 톤) */
+  --shadow-sm: 0 1px 2px rgba(38, 49, 58, 0.04), 0 2px 8px -2px rgba(38, 49, 58, 0.06);
+  --shadow: 0 1px 2px rgba(38, 49, 58, 0.04), 0 12px 32px -16px rgba(38, 49, 58, 0.16);
+  --shadow-lg: 0 2px 4px rgba(38, 49, 58, 0.04), 0 24px 56px -24px rgba(38, 49, 58, 0.24);
+  /* 포커스 링: 흰 틈 + 브랜드색 2px → 어떤 배경에서도 보이게 (WCAG 2.4.7 / 2.4.13) */
+  --ring: 0 0 0 2px var(--surface), 0 0 0 4px var(--brand);
+  --ring-soft: 0 0 0 4px color-mix(in srgb, var(--brand) 22%, transparent);
+
+  /* 움직임 */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration: 220ms;
 
   /* 간격 */
   --space-1: 4px;
@@ -47,21 +71,29 @@
   --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
+  --space-20: 80px;
   --space-24: 96px;
 
-  /* 글자 크기 */
+  /* 글자 크기 (1.25 비율) */
   --font-xs: 12px;
   --font-sm: 14px;
   --font-base: 16px;
   --font-lg: 18px;
-  --font-xl: 20px;
-  --font-2xl: 24px;
-  --font-3xl: 32px;
+  --font-xl: 21px;
+  --font-2xl: 26px;
+  --font-3xl: 33px;
+  --font-4xl: 44px;
+  --font-5xl: 56px;
 
   /* 레이아웃 */
-  --max-width: 1280px;
+  --max-width: 1240px;
   --header-height: 64px;
+  --header-offset: 12px;
+  /* 손가락 터치 최소 영역 (Apple HIG 44pt, WCAG 2.5.5 AAA 44px / 2.5.8 AA 24px) */
+  --tap: 44px;
   --youtube-panel-width: 380px;
 
-  --font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  /* 서체: 영문·숫자는 끝이 둥근 Nunito(layout.tsx 에서 로드), 한글은 시스템 고딕 */
+  --font-family: var(--font-nunito, ui-rounded), "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR",
+    system-ui, sans-serif;
 }

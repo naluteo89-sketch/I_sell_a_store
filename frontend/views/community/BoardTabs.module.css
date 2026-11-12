@@ -1,0 +1,48 @@
+.tabs {
+  display: flex;
+  gap: 2px;
+  width: fit-content;
+  max-width: 100%;
+  padding: 4px;
+  overflow-x: auto;
+  border-radius: var(--radius-full);
+  background: var(--bg-muted);
+  scrollbar-width: none;
+}
+
+.tab,
+.active {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-5);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  transition:
+    background-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
+}
+
+.tab {
+  color: var(--text-muted);
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.active {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 손가락으로 누르는 기기: 터치 영역 44px (Apple HIG, WCAG 2.5.5) */
+@media (pointer: coarse) {
+  .tab,
+  .active {
+    height: var(--tap);
+  }
+}

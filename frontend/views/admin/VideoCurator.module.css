@@ -64,3 +64,31 @@
   font-size: var(--font-xs);
   color: var(--text-faint);
 }
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: var(--bg-muted);
+}
+
+.tab,
+.tabOn {
+  flex: 1;
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-xs);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+}
+
+.tab {
+  color: var(--text-muted);
+}
+
+.tabOn {
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}

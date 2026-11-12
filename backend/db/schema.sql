@@ -25,6 +25,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- v1
 DROP TABLE IF EXISTS product_video_cache;
 -- v2 (다시 실행할 때)
+DROP TABLE IF EXISTS sourced_product;
+DROP TABLE IF EXISTS sourcing_cursor;
 DROP TABLE IF EXISTS payment;
 DROP TABLE IF EXISTS order_item;
 DROP TABLE IF EXISTS order_shipping;
@@ -175,6 +177,35 @@ CREATE TABLE product_video (
     CONSTRAINT fk_pv_video FOREIGN KEY (video_id)
         REFERENCES youtube_video (video_id) ON DELETE CASCADE
 ) ENGINE = InnoDB COMMENT = '상품 ↔ 영상 연결 (고정·제외·순위)';
+
+-- ============================================================
+-- 상품 수집 (유튜브 소개 제품 → 데모 상품)
+-- ============================================================
+
+CREATE TABLE sourced_product (
+    id            BIGINT       NOT NULL AUTO_INCREMENT,
+    product_id    BIGINT       NOT NULL COMMENT '등록된 데모 상품',
+    video_id      VARCHAR(20)  NOT NULL COMMENT '제품을 소개한 유튜브 영상 ID (ID만 보관, 영상 1개 → 제품 여러 개 가능)',
+    search_query  VARCHAR(255) NULL     COMMENT '설명란에서 뽑은 제품명 (나중에 가격 찾을 때 검색어)',
+    price_source  ENUM ('DESCRIPTION', 'TEST') NULL COMMENT 'DESCRIPTION=설명란 금액+가격규칙, TEST=테스트 가격 7701원',
+    source_price  BIGINT       NULL     COMMENT '설명란에서 찾은 원래 금액 (TEST 면 NULL)',
+    created_at    DATETIME(6)  NULL,
+    PRIMARY KEY (id),
+    KEY idx_sourced_video (video_id),
+    UNIQUE KEY uk_sourced_product (product_id),
+    KEY idx_sourced_price_source (price_source),
+    KEY idx_sourced_created (created_at),
+    CONSTRAINT fk_sourced_product FOREIGN KEY (product_id)
+        REFERENCES product (id) ON DELETE CASCADE
+) ENGINE = InnoDB COMMENT = '유튜브 소개 제품 수집 기록';
+
+CREATE TABLE sourcing_cursor (
+    query_text  VARCHAR(255) NOT NULL COMMENT '수집 검색어 (예: 패션 추천템)',
+    page_token  VARCHAR(255) NULL     COMMENT '다음에 받을 유튜브 검색 페이지 (NULL = 첫 페이지)',
+    exhausted   BIT(1)       NOT NULL DEFAULT b'0' COMMENT '마지막 페이지까지 확인함',
+    updated_at  DATETIME(6)  NULL,
+    PRIMARY KEY (query_text)
+) ENGINE = InnoDB COMMENT = '수집 검색어별 진행 위치 (이어서 수집)';
 
 -- ============================================================
 -- 주문

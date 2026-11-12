@@ -15,6 +15,8 @@ export function useProductPurchase(product: Product) {
   const [selected, setSelected] = useState<Record<number, number | undefined>>({});
   const [quantity, setQuantity] = useState(1);
   const [added, setAdded] = useState(false);
+  /** 옵션을 다 고르지 않고 버튼을 눌렀을 때 안내 (버튼을 미리 막지 않는다) */
+  const [needOptions, setNeedOptions] = useState(false);
 
   const variant = useMemo(() => (withOptions ? findVariant(product, selected) : null), [withOptions, product, selected]);
 
@@ -25,6 +27,7 @@ export function useProductPurchase(product: Product) {
 
   const pick = (optionId: number, valueId: number) => {
     setAdded(false);
+    setNeedOptions(false);
     setQuantity(1);
     setSelected((s) => ({ ...s, [optionId]: s[optionId] === valueId ? undefined : valueId }));
   };
@@ -56,13 +59,27 @@ export function useProductPurchase(product: Product) {
     isAvailable: (optionId: number, valueId: number) => isValueAvailable(product, selected, optionId, valueId),
     pick,
     setQuantity: (q: number) => setQuantity(Math.min(Math.max(1, stock), 99, Math.max(1, q))),
+    needOptions,
+    /** false 를 돌려주면 화면이 첫 번째 미선택 옵션으로 포커스를 옮긴다 */
     addToCart: () => {
+      if (!allChosen) {
+        setNeedOptions(true);
+        return false;
+      }
+      if (!canBuy) return false;
       putInCart();
       setAdded(true);
+      return true;
     },
     buyNow: () => {
+      if (!allChosen) {
+        setNeedOptions(true);
+        return false;
+      }
+      if (!canBuy) return false;
       putInCart();
       router.push("/checkout");
+      return true;
     },
   };
 }

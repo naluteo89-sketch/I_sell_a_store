@@ -6,10 +6,13 @@
 
 .summary {
   display: flex;
-  align-items: flex-end;
+  flex-wrap: wrap;
+  align-items: center;
   justify-content: space-between;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border);
+  gap: var(--space-4);
+  padding: var(--space-4) var(--space-4) var(--space-4) var(--space-6);
+  border-radius: var(--radius-full);
+  background: var(--bg);
 }
 
 .qty {
@@ -18,22 +21,52 @@
   gap: var(--space-3);
 }
 
+.qty :global(div) {
+  background: var(--surface);
+}
+
 .qtyLabel,
 .hint {
   font-size: var(--font-sm);
+  font-weight: 600;
   color: var(--text-muted);
 }
 
 .total {
+  padding-right: var(--space-3);
   text-align: right;
 }
 
 .amount {
   font-size: var(--font-xl);
-  font-weight: 700;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .actions {
-  display: flex;
-  gap: var(--space-2);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-3);
+}
+
+.status:empty {
+  display: none;
+}
+
+.warn,
+.ok {
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+}
+
+.warn {
+  color: var(--warn);
+  background: var(--warn-bg);
+}
+
+.ok {
+  color: var(--success);
+  background: var(--success-bg);
 }

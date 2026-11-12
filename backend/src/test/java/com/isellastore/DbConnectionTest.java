@@ -18,8 +18,6 @@ import com.isellastore.product.service.ProductAssembler;
 import com.isellastore.youtube.dto.VideoInfo;
 import com.isellastore.youtube.service.ProductVideoService;
 
-import com.isellastore.order.*;
-import com.isellastore.product.*;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

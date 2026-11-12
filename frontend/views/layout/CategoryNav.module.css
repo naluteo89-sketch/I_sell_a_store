@@ -1,34 +1,71 @@
 .desktop {
   display: none;
-  gap: var(--space-4);
-  font-size: var(--font-sm);
-  color: var(--text-muted);
+  gap: var(--space-1);
 }
 
-.desktop .item:hover {
+.item {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-muted);
+  border-radius: var(--radius-full);
+  transition:
+    background-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
+}
+
+.item:hover {
+  color: var(--text);
+  background: var(--bg);
+}
+
+.item.active {
   color: var(--brand);
+  background: var(--brand-soft);
 }
 
 .mobile {
   display: flex;
   gap: var(--space-2);
+  max-width: calc(var(--max-width) - var(--space-8));
+  margin: var(--space-3) auto 0;
+  padding: 0 var(--space-1) var(--space-2);
   overflow-x: auto;
-  padding: 0 var(--space-4) var(--space-2);
-  font-size: var(--font-sm);
+  scrollbar-width: none;
+}
+
+.mobile::-webkit-scrollbar {
+  display: none;
 }
 
 .mobile .item {
-  flex-shrink: 0;
-  padding: var(--space-1) var(--space-3);
-  border-radius: var(--radius-full);
-  background: var(--bg-muted);
+  height: 36px;
+  background: color-mix(in srgb, var(--surface) 86%, transparent);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(12px);
 }
 
-@media (min-width: 1024px) {
+.mobile .item.active {
+  background: var(--brand);
+  color: var(--on-brand);
+}
+
+@media (min-width: 1100px) {
   .desktop {
     display: flex;
   }
   .mobile {
     display: none;
+  }
+}
+
+/* 손가락으로 누르는 기기: 터치 영역 44px (Apple HIG, WCAG 2.5.5) */
+@media (pointer: coarse) {
+  .mobile .item {
+    height: var(--tap);
   }
 }

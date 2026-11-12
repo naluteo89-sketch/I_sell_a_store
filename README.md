@@ -38,11 +38,31 @@ frontend/
 ├── controllers/    C  use*.ts 훅(상태·로직: 장바구니, 옵션 선택, 주문서, 관리자 …)
 ├── views/          V  화면 컴포넌트(마크업) + 같은 이름의 *.module.css(스타일)
 │   ├── ui/         Button · Field · Card · Badge · Section · QuantityStepper …
-│   ├── layout/     Header · Footer · CategoryNav · SearchBox · CartLink
-│   ├── home/  product/  youtube/  cart/  checkout/  order/  admin/
-├── lib/            순수 계산(가격 범위·옵션 조합·포맷)
-└── styles/         tokens.css(색·간격·모서리 — 고객별 디자인은 여기만 수정) · globals.css(리셋)
+│   ├── layout/     Header · Footer · CategoryNav · SearchBox · CartLink · LanguageSwitcher
+│   ├── home/  product/  youtube/  cart/  checkout/  order/  community/  admin/
+├── lib/            순수 계산(가격 범위·옵션 조합·포맷) · i18n/(언어 감지·사전·포맷)
+├── docs/           market-api.md (언어별 시장·영상 모아보기 규격) · community-api.md · ux-guidelines.md
+└── styles/         tokens.css(색·간격·모서리·그림자·서체 — 고객별 디자인은 여기만 수정) · globals.css(리셋)
 ```
+
+### 리뷰 영상별 모아보기 (`/videos`)
+- 같은 영상에서 나온 상품을 한 페이지로 묶고, 선택·전체 **한번에 담기** (옵션 상품은 상품 페이지로 안내)
+- 정렬: 영상 조회수순 · **유튜버 인기순(채널 전체 조회수)** · 최신순 / 검색: 영상 제목 · **유튜버 이름**
+- 홈 "새로 들어온 상품"은 영상당 1개만, 상품 목록에도 리뷰 조회수순·유튜버 인기순 정렬
+- 상품은 **1이미지 1상품** (관리자 화면에서 같은 이미지 중복 저장 차단)
+
+### 다국어 (한국어 / English)
+- **언어 = 시장**: EN 이면 영미권 대상 상품, 영문 상품명·설명, 영어권 유튜버 영상이 나온다 (모든 요청에 `lang`, 규격 `frontend/docs/market-api.md`)
+- 언어 결정 순서: 헤더 `한 / EN` 토글로 고른 값(쿠키 `lang`) → 브라우저 언어(한국어면 ko, 그 밖은 en) → ko
+- 문구는 `lib/i18n/dictionaries.ts` 한 곳에 있다. `en` 은 `ko` 와 같은 키를 갖도록 타입으로 강제된다
+- 서버 컴포넌트는 `getI18n()`, 클라이언트 컴포넌트는 `useI18n()` 로 같은 모양(`t`, `price`, `views`, `category` …)을 받는다
+- 가격은 원화 그대로 표기만 바꾼다 (`38,000원` / `₩38,000`). 카테고리는 slug 로 번역, 상품명·설명은 DB 값 그대로
+- 관리자 화면은 내부 도구라 한국어만
+
+### 커뮤니티 (`/community`)
+- 게시판: 구매 후기 · 질문 · 자유 / 목록·상세·글쓰기·댓글·좋아요·비밀번호 삭제
+- 글은 DB(백엔드 API)에서만 온다. 백엔드는 `frontend/docs/community-api.md` 규격으로 별도 구현
+- 백엔드가 없으면 목록은 "다시 시도" 안내, 홈의 최근 글 영역은 숨김
 
 ---
 
@@ -130,7 +150,7 @@ curl.exe -X DELETE "http://localhost:8080/api/admin/seed/demo"
 - 상품별 영상: 검색 결과 보기, **고정 / 제외**, 영상 주소로 직접 고정, 패널 숨기기, 다시 검색
 
 ### 쇼핑몰 화면
-- 헤더 검색창(`/products?q=`), 주문조회, 모바일 카테고리 가로 스크롤
+- 떠 있는 캡슐 헤더: 검색창(`/products?q=`), 커뮤니티, 주문조회, 한/EN 토글, 모바일 카테고리 가로 스크롤
 - 목록: 정렬(최신·가격·이름), 품절 표시, 옵션 상품은 최저가 "~" 표시
 - 상세: 경로 표시, 사양 표, **옵션 버튼 선택**(재고 없는 조합은 흐리게), 선택 조합 가격·재고, 같은 카테고리 상품, 우측 유튜브 패널
 - 장바구니: 상품+옵션 조합 단위
@@ -162,7 +182,8 @@ PUT  /api/admin/products/{id}/videos/curation    {"pinnedVideoIds":[], "excluded
 |---|---|---|
 | 상호·문구·연락처·사업자 정보 | 환경변수 `BRAND_*` (`backend/.env.example` 참고) | 없음 |
 | 대표 색상·강조 색상 | `BRAND_PRIMARY_COLOR`, `BRAND_ACCENT_COLOR` | 없음 |
-| 그 밖의 디자인(글꼴·간격·모서리·배경색) | `frontend/styles/tokens.css` | CSS 변수만 |
+| 그 밖의 디자인(글꼴·간격·모서리·그림자·배경색) | `frontend/styles/tokens.css` | CSS 변수만 |
+| 화면 문구·영어 번역 | `frontend/lib/i18n/dictionaries.ts` | 사전만 |
 | 로고 | `BRAND_LOGO_URL` | 없음 |
 | 기능 켜고 끄기 | `FEATURE_CART`, `FEATURE_PAYMENT`, `FEATURE_YOUTUBE_PANEL` | 없음 |
 | 데모 상품 후보 | `demo/candidates.json` | 없음 |
@@ -180,4 +201,6 @@ PUT  /api/admin/products/{id}/videos/curation    {"pinnedVideoIds":[], "excluded
 - [ ] 주문 관리 화면
 - [ ] 상품 CSV 일괄 등록
 - [ ] 회원가입·로그인, 주문 내역
-- [ ] Shadcn UI 컴포넌트 적용, 테마 프리셋
+- [x] 부드러운 디자인 시스템(라운드·면 중심), 한/영 인터페이스, 커뮤니티 화면(프론트)
+- [ ] 커뮤니티 백엔드 연결, 상품명·설명 영어 필드
+- [ ] 테마 프리셋

@@ -1,9 +1,10 @@
 .section {
-  margin-top: var(--space-12);
+  margin-top: var(--space-16);
 }
 
 .head {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
   justify-content: space-between;
   gap: var(--space-4);
@@ -11,8 +12,8 @@
 }
 
 .title {
-  font-size: var(--font-xl);
-  font-weight: 700;
+  font-size: var(--font-2xl);
+  font-weight: 800;
 }
 
 .sub {

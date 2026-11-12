@@ -1,10 +1,10 @@
 .table {
   display: grid;
-  grid-template-columns: 96px 1fr;
-  row-gap: var(--space-2);
-  padding: var(--space-4) 0;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  grid-template-columns: minmax(80px, auto) 1fr;
+  gap: var(--space-2) var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
   font-size: var(--font-sm);
 }
 
@@ -13,5 +13,6 @@
 }
 
 .row dt {
+  font-weight: 600;
   color: var(--text-muted);
 }

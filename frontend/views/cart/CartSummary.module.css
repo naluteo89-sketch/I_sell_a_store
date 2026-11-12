@@ -10,11 +10,16 @@
 }
 
 .total {
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
   font-size: var(--font-lg);
-  font-weight: 700;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .note {
   font-size: var(--font-xs);
+  text-align: center;
   color: var(--text-faint);
 }

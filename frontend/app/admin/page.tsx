@@ -8,6 +8,6 @@ import AdminConsole from "@/views/admin/AdminConsole";
  */
 export default async function AdminPage() {
   if (process.env.NEXT_PUBLIC_ENABLE_ADMIN !== "true") notFound();
-  const categories = await fetchCategories();
+  const categories = await fetchCategories("ko");
   return <AdminConsole categories={categories} />;
 }

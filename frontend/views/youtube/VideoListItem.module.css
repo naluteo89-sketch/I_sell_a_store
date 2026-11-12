@@ -2,19 +2,86 @@
   display: flex;
   gap: var(--space-3);
   padding: var(--space-2);
-  border-radius: var(--radius);
+  border-radius: var(--radius-lg);
+  transition: background-color var(--duration) var(--ease);
 }
 
-.active {
-  background: var(--bg-muted);
+.item:hover {
+  background: var(--bg);
+}
+
+.active,
+.active:hover {
+  background: var(--brand-soft);
+}
+
+.thumbButton {
+  position: relative;
+  flex-shrink: 0;
+  width: 128px;
+  height: 72px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  /* 둥근 모서리 마스킹: overflow 만으로는 Safari 에서 iframe·확대(transform) 중인 자식이 모서리 밖으로 비침 */
+  clip-path: inset(0 round var(--radius-sm));
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  isolation: isolate;
+}
+
+.thumbButton:disabled {
+  cursor: default;
 }
 
 .thumb {
-  flex-shrink: 0;
-  width: 120px;
-  height: 68px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: var(--radius-sm);
+  transition: transform 400ms var(--ease);
+}
+
+.thumbButton:hover .thumb {
+  transform: scale(1.05);
+}
+
+.playBadge {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding-left: 1px;
+  border-radius: 50%;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 재생 중 표시: 세 개의 둥근 막대 */
+.bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 10px;
+}
+
+.bars i {
+  width: 3px;
+  border-radius: 2px;
+  background: var(--brand);
+  animation: bar 900ms var(--ease) infinite alternate;
+}
+
+.bars i:nth-child(1) { height: 40%; }
+.bars i:nth-child(2) { height: 100%; animation-delay: 150ms; }
+.bars i:nth-child(3) { height: 65%; animation-delay: 300ms; }
+
+@keyframes bar {
+  to {
+    transform: scaleY(0.4);
+  }
 }
 
 .body {
@@ -30,20 +97,90 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   font-size: var(--font-sm);
-  font-weight: 500;
-  line-height: 1.35;
+  font-weight: 700;
+  line-height: 1.4;
 }
 
 .meta {
+  display: flex;
+  gap: var(--space-2);
   margin-top: 2px;
   overflow: hidden;
   font-size: var(--font-xs);
   color: var(--text-muted);
   white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
-.play {
-  align-self: flex-start;
+.views {
+  color: var(--text-faint);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
   margin-top: auto;
+  padding-top: var(--space-1);
+}
+
+.collection {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: var(--brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (pointer: coarse) {
+  .collection {
+    min-height: var(--tap);
+  }
+}
+
+.playLabel,
+.playingLabel {
+  align-self: flex-start;
+  min-height: 28px;
+  padding: 0 var(--space-3);
+  font-size: var(--font-xs);
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  transition: background-color var(--duration) var(--ease);
+}
+
+.playLabel {
+  color: var(--on-brand);
+  background: var(--brand);
+}
+
+.playLabel:hover {
+  background: color-mix(in srgb, var(--brand) 88%, #000);
+}
+
+.playingLabel {
+  color: var(--brand);
+  background: var(--surface);
+  cursor: default;
+}
+
+/* 손가락으로 누르는 기기: 터치 영역 44px (Apple HIG, WCAG 2.5.5) */
+@media (pointer: coarse) {
+  .playLabel,
+  .playingLabel {
+    min-height: var(--tap);
+    padding: 0 var(--space-4);
+  }
+}
+
+/* 썸네일 버튼은 모서리 마스킹 때문에 자기 포커스 링이 잘리므로, 줄 전체에 링을 표시 */
+.thumbButton:focus-visible {
+  box-shadow: none;
+}
+
+.item:has(.thumbButton:focus-visible) {
+  box-shadow: var(--ring);
 }

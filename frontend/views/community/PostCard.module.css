@@ -1,0 +1,64 @@
+.card {
+  display: flex;
+  gap: var(--space-5);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
+}
+
+/* 마우스가 있는 기기에서만 떠오름 (터치에선 눌린 채 남지 않게) */
+@media (hover: hover) {
+  .card:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.title {
+  font-size: var(--font-lg);
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.body > :last-child {
+  align-self: stretch;
+  margin-top: var(--space-1);
+}
+
+.thumb {
+  flex-shrink: 0;
+  width: 88px;
+  height: 88px;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: #fff;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  padding: 10%;
+  object-fit: contain;
+}

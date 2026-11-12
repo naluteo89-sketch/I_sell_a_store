@@ -32,7 +32,7 @@ export default function AdminConsole({ categories }: { categories: Category[] })
           {c.message && <p className={styles.message}>{c.message}</p>}
           {c.selected === null && <EmptyState dashed>왼쪽에서 상품을 고르거나 새 상품을 등록하세요.</EmptyState>}
           {c.selected !== null && (c.selected === "new" || c.current) && (
-            <ProductEditor key={`${c.selected}-${c.version}`} item={c.current} categories={categories} busy={c.busy} onSave={c.save} />
+            <ProductEditor key={`${c.selected}-${c.version}`} item={c.current} categories={categories} busy={c.busy} onSave={c.save} others={c.items} />
           )}
           {c.current && <VideoCurator key={c.current.product.id} productId={c.current.product.id} />}
         </div>

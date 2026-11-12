@@ -2,27 +2,44 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: var(--space-3);
+  margin-top: var(--space-6);
 }
 
 .tile {
-  padding: var(--space-5);
-  font-weight: 600;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  transition: border-color 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 72px;
+  padding: 0 var(--space-3) 0 var(--space-6);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  transition:
+    box-shadow var(--duration) var(--ease),
+    transform var(--duration) var(--ease);
 }
 
-.tile:hover {
-  border-color: var(--brand);
-  color: var(--brand);
+/* 마우스가 있는 기기에서만 떠오름 (터치에선 눌린 채 남지 않게) */
+@media (hover: hover) {
+  .tile:hover {
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
+  }
+}
+
+.name {
+  font-weight: 800;
 }
 
 .hint {
-  display: block;
-  margin-top: var(--space-1);
+  flex-shrink: 0;
+  padding: var(--space-2) var(--space-4);
   font-size: var(--font-xs);
-  font-weight: 400;
-  color: var(--text-faint);
+  font-weight: 700;
+  color: var(--brand);
+  border-radius: var(--radius-full);
+  background: var(--brand-soft);
 }
 
 @media (min-width: 768px) {

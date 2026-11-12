@@ -2,22 +2,40 @@
   display: inline-flex;
   flex-shrink: 0;
   align-items: center;
-  gap: var(--space-1);
-  padding: 6px var(--space-3);
+  gap: var(--space-2);
+  height: 48px;
+  padding: 0 var(--space-4);
   font-size: var(--font-sm);
-  font-weight: 500;
+  font-weight: 700;
+  color: var(--on-brand);
+  background: var(--brand);
   border-radius: var(--radius-full);
+  transition: background-color var(--duration) var(--ease);
 }
 
 .link:hover {
-  background: var(--bg-muted);
+  background: color-mix(in srgb, var(--brand) 88%, #000);
+}
+
+.label {
+  display: none;
 }
 
 .count {
-  padding: 1px 6px;
+  display: grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
   font-size: var(--font-xs);
-  font-weight: 700;
-  color: #fff;
-  background: var(--accent);
+  font-weight: 800;
+  color: var(--brand);
+  background: var(--surface);
   border-radius: var(--radius-full);
+}
+
+@media (min-width: 640px) {
+  .label {
+    display: inline;
+  }
 }

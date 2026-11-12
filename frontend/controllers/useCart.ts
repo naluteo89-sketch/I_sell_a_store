@@ -11,6 +11,8 @@ type CartState = {
   add: (line: Omit<CartLine, "key" | "quantity">, quantity?: number) => void;
   setQuantity: (key: string, quantity: number) => void;
   remove: (key: string) => void;
+  /** 삭제 되돌리기: 원래 자리에 다시 넣는다 */
+  restore: (line: CartLine, index: number) => void;
   clear: () => void;
 };
 
@@ -31,6 +33,13 @@ export const useCart = create<CartState>()(
       setQuantity: (key, quantity) =>
         set((s) => ({ lines: s.lines.map((l) => (l.key === key ? { ...l, quantity: Math.min(99, Math.max(1, quantity)) } : l)) })),
       remove: (key) => set((s) => ({ lines: s.lines.filter((l) => l.key !== key) })),
+      restore: (line, index) =>
+        set((s) => {
+          if (s.lines.some((l) => l.key === line.key)) return s;
+          const lines = [...s.lines];
+          lines.splice(Math.min(index, lines.length), 0, line);
+          return { lines };
+        }),
       clear: () => set({ lines: [] }),
     }),
     { name: "isellastore-cart-v2" },

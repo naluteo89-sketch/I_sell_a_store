@@ -1,5 +1,6 @@
+import type { Locale } from "@/lib/i18n/config";
 import type { Category, Site } from "../types";
-import { get } from "./http";
+import { get, withLang } from "./http";
 
 /** 백엔드가 꺼져 있어도 화면이 깨지지 않도록 쓰는 기본값 */
 export const FALLBACK_SITE: Site = {
@@ -7,8 +8,8 @@ export const FALLBACK_SITE: Site = {
     name: "I sell a store",
     tagline: "",
     logoUrl: "",
-    primaryColor: "#111827",
-    accentColor: "#ef4444",
+    primaryColor: "#3d5a80",
+    accentColor: "#e98a95",
     phone: "",
     email: "",
     businessInfo: "",
@@ -16,12 +17,14 @@ export const FALLBACK_SITE: Site = {
   features: { cart: true, payment: true, reviews: false, youtubePanel: true },
 };
 
-export async function fetchSite(): Promise<Site> {
+/** 브랜드 문구(태그라인 등)도 언어별로 받을 수 있다 */
+export async function fetchSite(lang?: Locale): Promise<Site> {
   try {
-    return await get<Site>("/api/site");
+    return await get<Site>(lang ? withLang("/api/site", lang) : "/api/site");
   } catch {
     return FALLBACK_SITE;
   }
 }
 
-export const fetchCategories = () => get<Category[]>("/api/categories").catch(() => [] as Category[]);
+export const fetchCategories = (lang?: Locale) =>
+  get<Category[]>(lang ? withLang("/api/categories", lang) : "/api/categories").catch(() => [] as Category[]);

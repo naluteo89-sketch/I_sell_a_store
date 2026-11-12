@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useVideoCurator } from "@/controllers/useVideoCurator";
+import type { Locale } from "@/lib/i18n/config";
 import Button from "@/views/ui/Button";
 import { Checkbox, Input } from "@/views/ui/Field";
 import VideoRow from "./VideoRow";
@@ -9,20 +10,33 @@ import styles from "./VideoCurator.module.css";
 
 /** V — 상품별 유튜브 영상 고정·제외·숨김·재검색 (로직은 useVideoCurator) */
 export default function VideoCurator({ productId }: { productId: number }) {
-  const c = useVideoCurator(productId);
+  const [lang, setLang] = useState<Locale>("ko");
+  const c = useVideoCurator(productId, lang);
   const [input, setInput] = useState("");
 
-  if (!c.view) return <p className={styles.loading}>영상 정보를 불러오는 중…</p>;
+  const tabs = (
+    <div className={styles.tabs} role="group" aria-label="영상 언어">
+      {(["ko", "en"] as const).map((l) => (
+        <button key={l} type="button" aria-pressed={lang === l} className={lang === l ? styles.tabOn : styles.tab} onClick={() => setLang(l)}>
+          {l === "ko" ? "한국어 유튜버 (한국 화면)" : "영어권 유튜버 (영어 화면)"}
+        </button>
+      ))}
+    </div>
+  );
+
+  if (!c.view) return <div className={styles.box}>{tabs}<p className={styles.loading}>영상 정보를 불러오는 중…</p></div>;
   const v = c.view;
 
   return (
     <div className={styles.box}>
+      {tabs}
       <div className={styles.head}>
         <div>
           <h2 className={styles.title}>유튜브 영상</h2>
           <p className={styles.meta}>
             검색어 &quot;{v.keyword}&quot; ·{" "}
             {v.fetchedAt ? `마지막 검색 ${new Date(v.fetchedAt).toLocaleString("ko-KR")}` : "아직 검색 안 함"}
+            {lang === "en" && " · 영어·미국 기준 검색"}
           </p>
         </div>
         <Button variant="outline" size="sm" disabled={c.busy || !v.apiKeyConfigured} onClick={c.refresh}

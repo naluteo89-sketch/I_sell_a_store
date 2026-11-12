@@ -1,5 +1,6 @@
 "use client";
 
+import { useI18n } from "@/controllers/useI18n";
 import { useYoutubePanel } from "@/controllers/useYoutubePanel";
 import VideoListItem from "./VideoListItem";
 import YoutubePlayer from "./YoutubePlayer";
@@ -12,18 +13,25 @@ import styles from "./YoutubePanel.module.css";
  */
 export default function YoutubePanel({ productId }: { productId: number }) {
   const { videos, playing, play } = useYoutubePanel(productId);
+  const { t } = useI18n();
 
   return (
     <aside className={styles.panel}>
       <div className={styles.head}>
-        <h2 className={styles.title}>관련 영상</h2>
-        <span className={styles.source}>YouTube</span>
+        <h2 className={styles.title}>{t.youtube.title}</h2>
+        <span className={styles.source}>
+          <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden>
+            <rect width="16" height="12" rx="4" fill="currentColor" />
+            <path d="M6.5 3.5v5l4-2.5-4-2.5Z" fill="#fff" />
+          </svg>
+          YouTube
+        </span>
       </div>
 
       {playing && <YoutubePlayer video={playing} />}
 
-      {videos === null && <p className={styles.message}>영상을 불러오는 중…</p>}
-      {videos?.length === 0 && <p className={styles.message}>아직 연결된 영상이 없습니다.</p>}
+      {videos === null && <p className={styles.message}>{t.youtube.loading}</p>}
+      {videos?.length === 0 && <p className={styles.message}>{t.youtube.empty}</p>}
 
       <ul className={styles.list}>
         {videos?.map((v) => (

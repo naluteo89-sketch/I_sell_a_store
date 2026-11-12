@@ -1,18 +1,20 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
   font-size: var(--font-sm);
 }
 
 .line {
   display: flex;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .line > span:last-child {
   flex-shrink: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
 .option {
@@ -22,12 +24,15 @@
 .total {
   display: flex;
   justify-content: space-between;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--border);
-  font-weight: 700;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .payment {
   font-size: var(--font-sm);
+  text-align: center;
   color: var(--text-muted);
 }

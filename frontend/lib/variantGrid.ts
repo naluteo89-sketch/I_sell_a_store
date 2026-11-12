@@ -1,4 +1,4 @@
-import type { AdminProduct, Category } from "@/models/types";
+import type { AdminProduct, Category, Market } from "@/models/types";
 
 /** 관리자 편집기용 순수 계산 (화면·상태와 무관) */
 
@@ -32,7 +32,10 @@ export function combinations(options: ParsedOption[]): [string, string][][] {
 export function editorInitialState(item: AdminProduct | null, categories: Category[]) {
   if (!item) {
     return {
-      base: { name: "", description: "", price: 0, stock: 0, imageUrl: "", categorySlug: categories[0]?.slug ?? "", youtubeKeyword: "" },
+      base: {
+        name: "", description: "", price: 0, stock: 0, imageUrl: "", categorySlug: categories[0]?.slug ?? "", youtubeKeyword: "",
+        markets: ["KR"] as Market[], nameEn: "", descriptionEn: "", youtubeKeywordEn: "",
+      },
       attributes: [] as { name: string; value: string }[],
       options: [] as OptionRow[],
       variants: {} as Record<string, VariantState>,
@@ -57,6 +60,10 @@ export function editorInitialState(item: AdminProduct | null, categories: Catego
       imageUrl: p.imageUrl ?? "",
       categorySlug: p.categorySlug ?? "",
       youtubeKeyword: item.youtubeKeyword ?? "",
+      markets: (item.markets?.length ? item.markets : ["KR"]) as Market[],
+      nameEn: item.nameEn ?? "",
+      descriptionEn: item.descriptionEn ?? "",
+      youtubeKeywordEn: item.youtubeKeywordEn ?? "",
     },
     attributes: p.attributes.map((a) => ({ ...a })),
     options: p.options.map((o) => ({ name: o.name, valuesText: o.values.map((v) => v.name).join(", ") })),

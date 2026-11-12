@@ -1,23 +1,26 @@
-import { won } from "@/lib/format";
+"use client";
+
+import { useI18n } from "@/controllers/useI18n";
 import { ButtonLink } from "@/views/ui/Button";
 import Card from "@/views/ui/Card";
 import styles from "./CartSummary.module.css";
 
 export default function CartSummary({ total }: { total: number }) {
+  const { t, price } = useI18n();
   return (
-    <Card>
+    <Card sticky>
       <div className={styles.row}>
-        <span>배송비</span>
-        <span>무료</span>
+        <span>{t.cart.shipping}</span>
+        <span>{t.cart.free}</span>
       </div>
       <div className={styles.total}>
-        <span>합계</span>
-        <span>{won(total)}</span>
+        <span>{t.cart.total}</span>
+        <span>{price(total)}</span>
       </div>
-      <p className={styles.note}>가격·재고는 주문할 때 다시 확인됩니다.</p>
       <ButtonLink href="/checkout" size="lg" full>
-        주문하기
+        {t.cart.checkout}
       </ButtonLink>
+      <p className={styles.note}>{t.cart.note}</p>
     </Card>
   );
 }

@@ -1,50 +1,65 @@
 .info {
   display: grid;
-  gap: var(--space-8);
+  gap: var(--space-6);
   height: fit-content;
+  padding: var(--space-3);
+  border-radius: var(--radius-2xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .image {
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  border-radius: var(--radius-xl);
+  border-radius: calc(var(--radius-2xl) - var(--space-3));
+  /* 둥근 모서리 마스킹: overflow 만으로는 Safari 에서 iframe·확대(transform) 중인 자식이 모서리 밖으로 비침 */
+  clip-path: inset(0 round calc(var(--radius-2xl) - var(--space-3)));
+  -webkit-mask-image: -webkit-radial-gradient(white, black);
+  mask-image: radial-gradient(white, black);
+  isolation: isolate;
 }
 
 .text {
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+  padding: var(--space-3) var(--space-4) var(--space-5);
 }
 
 .category {
-  font-size: var(--font-sm);
-  color: var(--text-muted);
+  display: inline-flex;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: var(--brand);
+  border-radius: var(--radius-full);
+  background: var(--brand-soft);
 }
 
 .name {
-  margin-top: var(--space-1);
+  margin-top: var(--space-3);
   font-size: var(--font-2xl);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .price {
-  margin-top: var(--space-3);
-}
-
-.soldOut {
-  margin-top: var(--space-1);
-  font-size: var(--font-sm);
-  font-weight: 600;
-  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
 }
 
 .description {
-  line-height: 1.7;
+  line-height: 1.8;
   color: var(--text-muted);
 }
 
 @media (min-width: 768px) {
   .info {
     grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  .text {
+    padding: var(--space-6) var(--space-6) var(--space-6) var(--space-4);
   }
 }

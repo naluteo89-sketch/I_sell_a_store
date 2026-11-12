@@ -1,7 +1,9 @@
 "use client";
 
 import { useCheckout } from "@/controllers/useCheckout";
+import { useI18n } from "@/controllers/useI18n";
 import { useMounted } from "@/controllers/useMounted";
+import { ButtonLink } from "@/views/ui/Button";
 import EmptyState from "@/views/ui/EmptyState";
 import CheckoutSummary from "./CheckoutSummary";
 import PaymentMethodPicker from "./PaymentMethodPicker";
@@ -12,13 +14,16 @@ import styles from "./CheckoutView.module.css";
 export default function CheckoutView() {
   const c = useCheckout();
   const mounted = useMounted();
+  const { t } = useI18n();
   if (!mounted) return null;
-  if (c.lines.length === 0) return <EmptyState>주문할 상품이 없습니다.</EmptyState>;
+  if (c.lines.length === 0) {
+    return <EmptyState action={<ButtonLink href="/products">{t.cart.goShopping}</ButtonLink>}>{t.checkout.empty}</EmptyState>;
+  }
 
   return (
     <form onSubmit={c.submit} className={styles.layout}>
       <div className={styles.main}>
-        <h1 className={styles.title}>주문서</h1>
+        <h1 className={styles.title}>{t.checkout.title}</h1>
         <ShippingForm value={c.shipping} onChange={c.updateShipping} />
         <PaymentMethodPicker value={c.method} onChange={c.setMethod} />
       </div>

@@ -1,13 +1,34 @@
 .crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
   margin-bottom: var(--space-6);
   font-size: var(--font-sm);
+  font-weight: 600;
   color: var(--text-muted);
+}
+
+.crumbs a {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  transition: background-color var(--duration) var(--ease);
 }
 
 .crumbs a:hover {
   color: var(--text);
+  background: var(--surface);
 }
 
 .sep {
-  margin: 0 var(--space-2);
+  color: var(--text-faint);
+}
+
+/* 손가락으로 누르는 기기: 터치 영역 44px (Apple HIG, WCAG 2.5.5) */
+@media (pointer: coarse) {
+  .crumbs a {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--tap);
+  }
 }

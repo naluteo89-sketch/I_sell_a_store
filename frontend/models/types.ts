@@ -51,15 +51,22 @@ export type Product = {
   price: number;
   /** 옵션 상품이면 조합 재고 합계 */
   stock: number;
+  /** 대표 이미지 1장 (1이미지 1상품: 다른 상품과 같은 이미지를 쓰지 않는다) */
   imageUrl: string | null;
   categorySlug: string | null;
   categoryName: string | null;
   attributes: ProductAttribute[];
   options: ProductOption[];
   variants: ProductVariant[];
+  /** 이 상품을 소개한 대표 리뷰 영상 (같은 영상 상품 묶기에 사용, 백엔드가 주면 활용) */
+  primaryVideoId?: string | null;
 };
 
-export type ProductSort = "new" | "priceAsc" | "priceDesc" | "name";
+/**
+ * videoViews: 대표 리뷰 영상 조회수순
+ * channelViews: 유튜버(채널) 인기순 — 채널 전체 조회수 기준
+ */
+export type ProductSort = "new" | "priceAsc" | "priceDesc" | "name" | "videoViews" | "channelViews";
 
 export type Video = {
   videoId: string;
@@ -67,6 +74,23 @@ export type Video = {
   channelTitle: string | null;
   thumbnailUrl: string | null;
   viewCount: number;
+  /** 유튜버(채널) 정보: 유튜버 인기순 정렬·유튜버 이름 검색에 사용 */
+  channelId?: string | null;
+  channelViewCount?: number;
+  channelSubscriberCount?: number;
+  /** 이 영상에 연결된 상품 수 (2개 이상이면 "모아보기" 링크 표시) */
+  productCount?: number;
+};
+
+/** 영상 모아보기 정렬: 영상 조회수순 / 유튜버 인기순 / 최신순 */
+export type VideoSort = "views" | "channelViews" | "new";
+
+/** 리뷰 영상 하나 + 그 영상에 나온 상품들 (docs/video-collection-api.md) */
+export type VideoCollection = {
+  video: Video;
+  productCount: number;
+  /** 목록 API 에서는 미리보기용 최대 4개, 상세 API 에서는 전부 */
+  products: Product[];
 };
 
 // ───────── 장바구니 ─────────
@@ -132,12 +156,21 @@ export type Order = {
 
 // ───────── 관리자 ─────────
 
+/** 판매 지역(시장): KR = 한국어 화면, US = 영어(영미권) 화면에 노출 */
+export type Market = "KR" | "US";
+
 export type AdminProduct = {
+  /** 한국어 기준 상품 정보 */
   product: Product;
   active: boolean;
   demo: boolean;
   youtubeKeyword: string | null;
   effectiveKeyword: string;
+  markets?: Market[];
+  nameEn?: string | null;
+  descriptionEn?: string | null;
+  /** 영어권 유튜버 영상 검색어 (비우면 "영문 상품명 review") */
+  youtubeKeywordEn?: string | null;
 };
 
 export type AdminVideoView = {
@@ -168,7 +201,55 @@ export type ProductForm = {
   imageUrl: string;
   categorySlug: string;
   youtubeKeyword: string;
+  markets: Market[];
+  nameEn: string;
+  descriptionEn: string;
+  youtubeKeywordEn: string;
   attributes: ProductAttribute[];
   options: { name: string; values: string[] }[];
   variants: ProductFormVariant[];
 };
+
+// ───────── 커뮤니티 ─────────
+// 백엔드 규격: docs/community-api.md
+
+export type CommunityBoard = "review" | "question" | "free";
+
+export type CommunityPostSummary = {
+  id: number;
+  board: CommunityBoard;
+  title: string;
+  /** 본문 앞부분 (목록용, 서버에서 잘라서 내려줌) */
+  excerpt: string;
+  author: string;
+  createdAt: string;
+  commentCount: number;
+  likeCount: number;
+  viewCount: number;
+  /** 관련 상품 (선택) */
+  productId: number | null;
+  productName: string | null;
+  productImageUrl: string | null;
+};
+
+export type CommunityComment = { id: number; author: string; body: string; createdAt: string };
+
+export type CommunityPost = CommunityPostSummary & {
+  body: string;
+  comments: CommunityComment[];
+  /** 지금 보는 사람이 좋아요를 눌렀는지 */
+  liked: boolean;
+};
+
+export type CommunityPage = { items: CommunityPostSummary[]; page: number; totalPages: number; total: number };
+
+export type CommunityPostForm = {
+  board: CommunityBoard;
+  title: string;
+  body: string;
+  author: string;
+  password: string;
+  productId: number | null;
+};
+
+export type CommunityCommentForm = { author: string; password: string; body: string };

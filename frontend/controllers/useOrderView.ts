@@ -11,19 +11,19 @@ type State = "loading" | "ask" | "done";
 export function useOrderView(orderNo: string) {
   const [order, setOrder] = useState<Order | null>(null);
   const [state, setState] = useState<State>("loading");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(false);
 
   const load = useCallback(
     async (phone: string) => {
       setState("loading");
-      setError(null);
+      setError(false);
       try {
         const o = await orderApi.get(orderNo, phone);
         rememberOrder({ orderNo, phone });
         setOrder(o);
         setState("done");
       } catch {
-        setError("주문번호와 연락처가 일치하는 주문이 없습니다.");
+        setError(true);
         setState("ask");
       }
     },

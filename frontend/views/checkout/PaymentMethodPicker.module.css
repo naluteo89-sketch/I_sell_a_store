@@ -1,12 +1,17 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-4);
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .title {
+  margin-left: var(--space-2);
   font-size: var(--font-lg);
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .grid {
@@ -20,11 +25,17 @@
 }
 
 .note {
+  padding: var(--space-3) var(--space-5);
   font-size: var(--font-xs);
-  color: var(--text-faint);
+  color: var(--warn);
+  border-radius: var(--radius-full);
+  background: var(--warn-bg);
 }
 
 @media (min-width: 768px) {
+  .section {
+    padding: var(--space-8);
+  }
   .grid {
     grid-template-columns: repeat(3, 1fr);
   }

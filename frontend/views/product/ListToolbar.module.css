@@ -2,8 +2,8 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-3);
-  margin: var(--space-6) 0;
+  gap: var(--space-4);
+  margin-bottom: var(--space-8);
 }
 
 .tabs {
@@ -14,13 +14,26 @@
 
 .tab,
 .tabActive {
-  padding: 6px var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 var(--space-5);
   font-size: var(--font-sm);
+  font-weight: 700;
   border-radius: var(--radius-full);
+  transition:
+    background-color var(--duration) var(--ease),
+    color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
 }
 
 .tab {
-  background: var(--bg-muted);
+  background: var(--surface);
+  color: var(--text-muted);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab:hover {
   color: var(--text);
 }
 
@@ -29,11 +42,28 @@
   color: var(--on-brand);
 }
 
+/* 정렬: 하나의 둥근 트랙 안 세그먼트 */
 .sorts {
   display: flex;
-  gap: var(--space-3);
+  gap: 2px;
   margin-left: auto;
-  font-size: var(--font-sm);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: var(--bg-muted);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.sort,
+.sortActive {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 34px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-xs);
+  font-weight: 700;
+  border-radius: var(--radius-full);
 }
 
 .sort {
@@ -45,6 +75,17 @@
 }
 
 .sortActive {
-  font-weight: 600;
-  color: var(--brand);
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+/* 손가락으로 누르는 기기: 터치 영역 44px (Apple HIG, WCAG 2.5.5) */
+@media (pointer: coarse) {
+  .tab,
+  .tabActive,
+  .sort,
+  .sortActive {
+    height: var(--tap);
+  }
 }

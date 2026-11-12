@@ -1,16 +1,45 @@
+/* 입력칸: 테두리 없는 채운 알약형, 포커스 때 흰 면 + 부드러운 링 */
 .field {
   width: 100%;
-  padding: var(--space-2) var(--space-3);
-  font-size: var(--font-sm);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  min-height: 48px;
+  padding: var(--space-3) var(--space-5);
+  font-size: var(--font-base);
+  border: 0;
+  border-radius: var(--radius-full);
   background: var(--bg);
   outline: none;
-  transition: border-color 0.15s;
+  transition:
+    background-color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
+}
+
+textarea.field {
+  min-height: 160px;
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  line-height: 1.7;
+  resize: vertical;
+}
+
+select.field {
+  appearance: none;
+  padding-right: var(--space-10);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1.5 1.5 6 6l4.5-4.5' stroke='%236b7782' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 18px center;
+}
+
+.field::placeholder {
+  color: var(--text-faint);
+}
+
+.field:hover {
+  background-color: var(--bg-muted);
 }
 
 .field:focus {
-  border-color: var(--brand);
+  background-color: var(--surface);
+  box-shadow: var(--ring-soft);
 }
 
 .field:disabled {
@@ -19,29 +48,53 @@
 }
 
 .compact {
-  padding: var(--space-1) var(--space-2);
-  border-radius: var(--radius-sm);
+  min-height: 36px;
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-sm);
+}
+
+/* iOS 입력 확대 방지 */
+@media (max-width: 768px) {
+  .compact {
+    font-size: var(--font-base);
+  }
 }
 
 .labeled {
   display: flex;
   flex-direction: column;
-  gap: var(--space-1);
+  gap: var(--space-2);
 }
 
 .label {
-  font-size: var(--font-xs);
+  padding-left: var(--space-2);
+  font-size: var(--font-sm);
+  font-weight: 600;
   color: var(--text-muted);
 }
 
 .checkbox {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-2);
+  gap: var(--space-3);
+  margin: calc(var(--space-2) * -1);
+  padding: var(--space-3);
   font-size: var(--font-sm);
+  color: var(--text-muted);
+  border-radius: var(--radius);
   cursor: pointer;
+  transition: background-color var(--duration) var(--ease);
+}
+
+/* 체크박스와 글자 전체가 하나의 넉넉한 누름 영역 */
+.checkbox:hover {
+  background: var(--bg);
 }
 
 .checkbox input {
-  margin-top: 3px;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+  accent-color: var(--brand);
 }

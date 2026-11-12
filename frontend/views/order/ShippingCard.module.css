@@ -5,6 +5,11 @@
   font-size: var(--font-sm);
 }
 
+.strong {
+  font-weight: 700;
+}
+
 .muted {
+  font-weight: 400;
   color: var(--text-muted);
 }

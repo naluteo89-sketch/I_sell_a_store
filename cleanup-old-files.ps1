@@ -60,7 +60,10 @@ $files = @(
   "frontend/app/globals.css",
   "frontend/postcss.config.mjs",
   "backend/src/main/java/com/isellastore/youtube/ProductVideoCache.java",
-  "backend/src/main/java/com/isellastore/youtube/ProductVideoCacheRepository.java"
+  "backend/src/main/java/com/isellastore/youtube/ProductVideoCacheRepository.java",
+  "frontend/models/api/communitySeed.ts",
+  "frontend/views/community/MockNotice.tsx",
+  "frontend/views/community/MockNotice.module.css"
 )
 foreach ($f in $files) {
   if (Test-Path $f) {

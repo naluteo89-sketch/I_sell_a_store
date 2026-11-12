@@ -1,21 +1,144 @@
 .hero {
-  margin: var(--space-8) 0;
-  padding: var(--space-16) var(--space-8);
+  display: grid;
+  gap: var(--space-10);
+  align-items: center;
+  margin-top: var(--space-6);
+  padding: var(--space-10) var(--space-6);
   border-radius: var(--radius-2xl);
-  background: var(--brand);
-  color: var(--on-brand);
+  background:
+    radial-gradient(120% 90% at 100% 0%, var(--brand-soft) 0%, transparent 60%),
+    var(--surface);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.copy {
+  max-width: 34rem;
 }
 
 .title {
-  font-size: var(--font-3xl);
-  font-weight: 700;
+  font-size: clamp(var(--font-3xl), 6vw, var(--font-5xl));
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: var(--text);
 }
 
 .tagline {
-  margin-top: var(--space-3);
-  opacity: 0.8;
+  margin-top: var(--space-4);
+  font-size: var(--font-lg);
+  color: var(--text-muted);
 }
 
-.action {
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
   margin-top: var(--space-8);
+}
+
+/* 오른쪽: 겹친 둥근 타일 */
+.collage {
+  position: relative;
+  height: 300px;
+}
+
+.tile {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  background: var(--bg);
+  box-shadow: var(--shadow-lg);
+}
+
+.tile img {
+  width: 100%;
+  height: 100%;
+  padding: 12%;
+  object-fit: contain;
+  background: #fff;
+}
+
+.tile span {
+  font-size: var(--font-4xl);
+  font-weight: 900;
+  color: var(--text-faint);
+}
+
+.tile0 {
+  top: 0;
+  left: 4%;
+  width: 58%;
+  aspect-ratio: 1;
+  max-height: 260px;
+  z-index: 2;
+}
+
+.tile1 {
+  top: 8%;
+  right: 0;
+  width: 40%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.tile2 {
+  bottom: 0;
+  right: 14%;
+  width: 34%;
+  aspect-ratio: 1;
+  z-index: 3;
+}
+
+.videoPill {
+  position: absolute;
+  left: 0;
+  bottom: 6%;
+  z-index: 4;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-5) var(--space-2) var(--space-2);
+  font-size: var(--font-sm);
+  font-weight: 800;
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  /* 한 번만 떠오른다: 5초 넘게 반복되는 움직임은 정지 수단이 필요 (WCAG 2.2.2) */
+  animation: float 900ms var(--ease) 300ms both;
+}
+
+.playDot {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding-left: 2px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--accent-strong);
+}
+
+@keyframes float {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (min-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    padding: var(--space-16) var(--space-16);
+  }
+  .collage {
+    height: 380px;
+  }
+  .tile0 {
+    max-height: 320px;
+  }
 }

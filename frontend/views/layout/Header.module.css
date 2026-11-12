@@ -2,51 +2,71 @@
   position: sticky;
   top: 0;
   z-index: 20;
-  border-bottom: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(8px);
+  padding: var(--header-offset) var(--space-3) 0;
 }
 
 .bar {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
-  max-width: var(--max-width);
+  gap: var(--space-2);
+  max-width: calc(var(--max-width) - var(--space-8));
   height: var(--header-height);
   margin: 0 auto;
-  padding: 0 var(--space-4);
+  padding: 0 var(--space-2) 0 var(--space-6);
+  border-radius: var(--radius-full);
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  box-shadow: var(--shadow);
+  backdrop-filter: saturate(1.4) blur(16px);
+  -webkit-backdrop-filter: saturate(1.4) blur(16px);
 }
 
 .logo {
   flex-shrink: 0;
+  margin-right: var(--space-2);
   font-size: var(--font-lg);
-  font-weight: 700;
+  font-weight: 900;
+  letter-spacing: -0.03em;
   color: var(--brand);
 }
 
 .logoImage {
-  height: 32px;
+  height: 30px;
+}
+
+.links {
+  display: none;
+  flex-shrink: 0;
+  gap: var(--space-1);
 }
 
 .link {
-  display: none;
-  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 var(--space-4);
   font-size: var(--font-sm);
+  font-weight: 600;
   color: var(--text-muted);
+  border-radius: var(--radius-full);
+  transition:
+    background-color var(--duration) var(--ease),
+    color var(--duration) var(--ease);
 }
 
 .link:hover {
-  color: var(--brand);
+  background: var(--bg);
+  color: var(--text);
 }
 
-@media (min-width: 640px) {
-  .link {
-    display: block;
+@media (min-width: 900px) {
+  .links {
+    display: flex;
   }
 }
 
-@media (min-width: 768px) {
+/* 손가락으로 누르는 기기: 터치 영역 44px (Apple HIG, WCAG 2.5.5) */
+@media (pointer: coarse) {
   .bar {
-    gap: var(--space-6);
+    padding-left: var(--space-5);
   }
 }

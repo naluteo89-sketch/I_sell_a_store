@@ -1,34 +1,42 @@
 .list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: var(--space-3);
   font-size: var(--font-sm);
 }
 
 .line {
   display: flex;
   justify-content: space-between;
-  gap: var(--space-2);
+  gap: var(--space-3);
 }
 
 .line > span:last-child {
   flex-shrink: 0;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
 
-.option {
+.option,
+.qty {
   color: var(--text-muted);
 }
 
 .total {
   display: flex;
   justify-content: space-between;
-  padding-top: var(--space-4);
-  border-top: 1px solid var(--border);
+  padding: var(--space-4) var(--space-5);
+  border-radius: var(--radius-lg);
+  background: var(--bg);
   font-size: var(--font-lg);
-  font-weight: 700;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
 }
 
 .error {
+  padding: var(--space-3) var(--space-5);
   font-size: var(--font-sm);
   color: var(--danger);
+  border-radius: var(--radius-lg);
+  background: var(--accent-soft);
 }

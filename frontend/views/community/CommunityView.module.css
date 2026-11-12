@@ -1,0 +1,68 @@
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding-top: var(--space-10);
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-5);
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  font-size: var(--font-4xl);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+}
+
+.desc {
+  margin-top: var(--space-1);
+  color: var(--text-muted);
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-5);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  transition: opacity var(--duration) var(--ease);
+}
+
+.dim {
+  opacity: 0.6;
+}
+
+.skeleton {
+  height: 136px;
+  opacity: 0;
+  animation:
+    show 0s 250ms forwards,
+    shimmer 1.4s linear infinite;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(90deg, var(--surface) 0%, var(--bg-soft) 50%, var(--surface) 100%);
+  background-size: 200% 100%;
+}
+
+@keyframes show {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
