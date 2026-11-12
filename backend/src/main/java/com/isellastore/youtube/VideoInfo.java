@@ -1,10 +1,1 @@
-package com.isellastore.youtube;
-
-/** 사이드 패널에 표시할 영상 1개. viewCount는 정렬·데모 상품 선정에만 쓰고 가공 지표는 만들지 않는다. */
-public record VideoInfo(
-        String videoId,
-        String title,
-        String channelTitle,
-        String thumbnailUrl,
-        long viewCount
-) {}
+// 기능별 폴더(controller/service/repository/domain/dto)로 이동되어 사용하지 않습니다. 이 파일은 삭제하세요.

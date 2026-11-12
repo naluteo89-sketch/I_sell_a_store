@@ -1,0 +1,53 @@
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.label {
+  font-size: var(--font-sm);
+  font-weight: 500;
+}
+
+.hint {
+  margin-left: var(--space-1);
+  font-size: var(--font-xs);
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+.scroll {
+  max-height: 288px;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.table {
+  width: 100%;
+  font-size: var(--font-sm);
+}
+
+.table th {
+  position: sticky;
+  top: 0;
+  padding: 6px var(--space-2);
+  text-align: left;
+  font-size: var(--font-xs);
+  font-weight: 500;
+  color: var(--text-muted);
+  background: var(--bg-soft);
+}
+
+.table td {
+  padding: var(--space-1) var(--space-2);
+  border-top: 1px solid var(--border);
+}
+
+.combo {
+  white-space: nowrap;
+}
+
+.center {
+  text-align: center;
+}

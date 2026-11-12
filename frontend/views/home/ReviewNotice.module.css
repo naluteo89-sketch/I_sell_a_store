@@ -1,0 +1,14 @@
+.notice {
+  margin-top: var(--space-8);
+  padding: var(--space-6);
+  border-radius: var(--radius-xl);
+  background: var(--bg-soft);
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.title {
+  margin-bottom: var(--space-1);
+  font-weight: 600;
+  color: var(--text);
+}

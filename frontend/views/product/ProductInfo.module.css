@@ -1,0 +1,50 @@
+.info {
+  display: grid;
+  gap: var(--space-8);
+  height: fit-content;
+}
+
+.image {
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.category {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.name {
+  margin-top: var(--space-1);
+  font-size: var(--font-2xl);
+  font-weight: 700;
+}
+
+.price {
+  margin-top: var(--space-3);
+}
+
+.soldOut {
+  margin-top: var(--space-1);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.description {
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+@media (min-width: 768px) {
+  .info {
+    grid-template-columns: 1fr 1fr;
+  }
+}

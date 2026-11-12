@@ -1,0 +1,29 @@
+.frame {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.image,
+.placeholder {
+  width: 100%;
+  height: 100%;
+}
+
+.image {
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  color: var(--text-faint);
+  background: linear-gradient(135deg, var(--bg-muted), var(--border));
+}
+
+.dim {
+  opacity: 0.5;
+}

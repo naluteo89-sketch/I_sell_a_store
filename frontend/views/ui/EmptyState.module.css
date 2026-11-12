@@ -1,0 +1,16 @@
+.empty {
+  padding: var(--space-16) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+}
+
+.dashed {
+  padding: var(--space-10) var(--space-4);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.action {
+  margin-top: var(--space-6);
+}

@@ -1,0 +1,34 @@
+.desktop {
+  display: none;
+  gap: var(--space-4);
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.desktop .item:hover {
+  color: var(--brand);
+}
+
+.mobile {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: 0 var(--space-4) var(--space-2);
+  font-size: var(--font-sm);
+}
+
+.mobile .item {
+  flex-shrink: 0;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  background: var(--bg-muted);
+}
+
+@media (min-width: 1024px) {
+  .desktop {
+    display: flex;
+  }
+  .mobile {
+    display: none;
+  }
+}

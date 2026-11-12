@@ -1,0 +1,13 @@
+.crumbs {
+  margin-bottom: var(--space-6);
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.crumbs a:hover {
+  color: var(--text);
+}
+
+.sep {
+  margin: 0 var(--space-2);
+}

@@ -1,7 +1,1 @@
-package com.isellastore.order;
-
-public enum OrderStatus {
-    PENDING,   // 주문서 작성, 결제 전
-    PAID,      // 결제 완료
-    CANCELED
-}
+// 기능별 폴더(controller/service/repository/domain/dto)로 이동되어 사용하지 않습니다. 이 파일은 삭제하세요.

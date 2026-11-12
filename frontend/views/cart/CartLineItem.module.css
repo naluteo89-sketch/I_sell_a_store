@@ -1,0 +1,48 @@
+.item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+}
+
+.thumb {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: var(--radius);
+}
+
+.info {
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.name:hover {
+  text-decoration: underline;
+}
+
+.sub {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.subtotal {
+  width: 96px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.remove {
+  font-size: var(--font-sm);
+  color: var(--text-faint);
+}
+
+.remove:hover {
+  color: var(--text);
+}

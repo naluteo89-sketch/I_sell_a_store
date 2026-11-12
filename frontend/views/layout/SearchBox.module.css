@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: 0;
+  margin-left: auto;
+}
+
+.input {
+  width: 100%;
+  padding: 6px var(--space-4);
+  font-size: var(--font-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background: var(--bg-soft);
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--brand);
+}
+
+@media (min-width: 768px) {
+  .form {
+    max-width: 320px;
+  }
+}

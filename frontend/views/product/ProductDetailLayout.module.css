@@ -1,0 +1,11 @@
+.single,
+.withSide {
+  display: grid;
+  gap: var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .withSide {
+    grid-template-columns: 1fr var(--youtube-panel-width);
+  }
+}

@@ -1,0 +1,21 @@
+.footer {
+  margin-top: var(--space-24);
+  border-top: 1px solid var(--border);
+  background: var(--bg-soft);
+}
+
+.inner {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-4);
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.name {
+  font-weight: 600;
+  color: var(--text);
+}

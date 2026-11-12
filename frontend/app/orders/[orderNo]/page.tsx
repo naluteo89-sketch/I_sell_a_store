@@ -1,4 +1,4 @@
-import OrderView from "@/components/OrderView";
+import OrderView from "@/views/order/OrderView";
 
 export default async function OrderPage({
   params,

@@ -1,0 +1,29 @@
+.page {
+  padding: var(--space-8) 0;
+}
+
+.title {
+  margin-bottom: var(--space-6);
+  font-size: var(--font-2xl);
+  font-weight: 700;
+}
+
+.layout {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.list {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.list > li + li {
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr 320px;
+  }
+}

@@ -1,0 +1,21 @@
+.hero {
+  margin: var(--space-8) 0;
+  padding: var(--space-16) var(--space-8);
+  border-radius: var(--radius-2xl);
+  background: var(--brand);
+  color: var(--on-brand);
+}
+
+.title {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+}
+
+.tagline {
+  margin-top: var(--space-3);
+  opacity: 0.8;
+}
+
+.action {
+  margin-top: var(--space-8);
+}

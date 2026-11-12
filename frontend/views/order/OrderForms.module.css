@@ -1,0 +1,27 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 384px;
+  margin: 0 auto;
+  padding: var(--space-16) 0;
+}
+
+.title {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+}
+
+.desc {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.mono {
+  font-family: ui-monospace, monospace;
+}
+
+.error {
+  font-size: var(--font-sm);
+  color: var(--danger);
+}

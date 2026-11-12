@@ -1,0 +1,17 @@
+.price {
+  font-weight: 700;
+}
+
+.md {
+  font-size: var(--font-base);
+}
+
+.lg {
+  font-size: var(--font-2xl);
+}
+
+.rest {
+  font-size: var(--font-sm);
+  font-weight: 400;
+  color: var(--text-muted);
+}

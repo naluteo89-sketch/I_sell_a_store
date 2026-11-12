@@ -6,7 +6,42 @@
 ```
 I_sell_a_store/
 ├── backend/    Spring Boot 3.5 (내장 Tomcat) · Java 21 · JPA · MySQL 8 (기본) / H2 / PostgreSQL
-└── frontend/   Next.js 15 (App Router) · Tailwind CSS 4 · Zustand(장바구니)
+└── frontend/   Next.js 15 (App Router) · CSS Modules · Zustand(장바구니)
+```
+
+### 코드 구조 (역할별 분리)
+
+**백엔드** — 기능별 폴더 안을 계층으로 나눔
+```
+com.isellastore
+├── global/      config(설정) · error(공통 예외 → 응답) · health(DB 상태)
+├── site/        controller · dto                       브랜드·기능 구성
+├── product/     controller · service · repository · domain · dto
+├── order/       controller · service · repository · domain · dto
+├── youtube/     controller · service · repository · domain · dto · client(유튜브 API)
+├── seed/        controller · service                   데모 상품
+├── admin/       repository · domain                    관리자 계정
+└── payment/     PaymentGateway(결제사 어댑터) · MockPaymentGateway
+```
+- **controller**: 요청 받기 → 서비스 호출 → 응답 (로직 없음)
+- **service**: 업무 로직·트랜잭션
+- **repository**: DB 조회·저장
+- **domain**: 엔티티(테이블과 1:1)
+- **dto**: 요청·응답 모양
+- 오류는 서비스가 `ApiException`을 던지면 `GlobalExceptionHandler`가 `{status, message}`로 응답
+
+**프론트엔드** — M·V·C + HTML/CSS 분리
+```
+frontend/
+├── app/            라우트(페이지) — views 를 조립만 한다
+├── models/         M  types.ts(데이터 모양) · api/(백엔드 호출)
+├── controllers/    C  use*.ts 훅(상태·로직: 장바구니, 옵션 선택, 주문서, 관리자 …)
+├── views/          V  화면 컴포넌트(마크업) + 같은 이름의 *.module.css(스타일)
+│   ├── ui/         Button · Field · Card · Badge · Section · QuantityStepper …
+│   ├── layout/     Header · Footer · CategoryNav · SearchBox · CartLink
+│   ├── home/  product/  youtube/  cart/  checkout/  order/  admin/
+├── lib/            순수 계산(가격 범위·옵션 조합·포맷)
+└── styles/         tokens.css(색·간격·모서리 — 고객별 디자인은 여기만 수정) · globals.css(리셋)
 ```
 
 ---
@@ -127,6 +162,7 @@ PUT  /api/admin/products/{id}/videos/curation    {"pinnedVideoIds":[], "excluded
 |---|---|---|
 | 상호·문구·연락처·사업자 정보 | 환경변수 `BRAND_*` (`backend/.env.example` 참고) | 없음 |
 | 대표 색상·강조 색상 | `BRAND_PRIMARY_COLOR`, `BRAND_ACCENT_COLOR` | 없음 |
+| 그 밖의 디자인(글꼴·간격·모서리·배경색) | `frontend/styles/tokens.css` | CSS 변수만 |
 | 로고 | `BRAND_LOGO_URL` | 없음 |
 | 기능 켜고 끄기 | `FEATURE_CART`, `FEATURE_PAYMENT`, `FEATURE_YOUTUBE_PANEL` | 없음 |
 | 데모 상품 후보 | `demo/candidates.json` | 없음 |

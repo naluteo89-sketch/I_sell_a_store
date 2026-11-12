@@ -1,11 +1,25 @@
 package com.isellastore;
 
-import com.isellastore.admin.AdminUser;
-import com.isellastore.admin.AdminUserRepository;
+import com.isellastore.admin.domain.AdminUser;
+import com.isellastore.admin.repository.AdminUserRepository;
+import com.isellastore.order.domain.OrderItem;
+import com.isellastore.order.domain.OrderShipping;
+import com.isellastore.order.domain.Payment;
+import com.isellastore.order.domain.StoreOrder;
+import com.isellastore.order.repository.StoreOrderRepository;
+import com.isellastore.product.domain.Product;
+import com.isellastore.product.domain.ProductOption;
+import com.isellastore.product.domain.ProductVariant;
+import com.isellastore.product.dto.ProductForm;
+import com.isellastore.product.repository.CategoryRepository;
+import com.isellastore.product.repository.ProductRepository;
+import com.isellastore.product.repository.ProductVariantRepository;
+import com.isellastore.product.service.ProductAssembler;
+import com.isellastore.youtube.dto.VideoInfo;
+import com.isellastore.youtube.service.ProductVideoService;
+
 import com.isellastore.order.*;
 import com.isellastore.product.*;
-import com.isellastore.youtube.ProductVideoService;
-import com.isellastore.youtube.VideoInfo;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

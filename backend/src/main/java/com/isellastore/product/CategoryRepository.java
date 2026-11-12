@@ -1,11 +1,1 @@
-package com.isellastore.product;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.List;
-import java.util.Optional;
-
-public interface CategoryRepository extends JpaRepository<Category, Long> {
-    Optional<Category> findBySlug(String slug);
-    List<Category> findAllByOrderBySortOrderAsc();
-}
+// 기능별 폴더(controller/service/repository/domain/dto)로 이동되어 사용하지 않습니다. 이 파일은 삭제하세요.

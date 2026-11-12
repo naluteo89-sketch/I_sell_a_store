@@ -1,0 +1,17 @@
+.table {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  row-gap: var(--space-2);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  font-size: var(--font-sm);
+}
+
+.row {
+  display: contents;
+}
+
+.row dt {
+  color: var(--text-muted);
+}

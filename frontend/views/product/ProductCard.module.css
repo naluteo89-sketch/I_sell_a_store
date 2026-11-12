@@ -1,0 +1,46 @@
+.card {
+  display: block;
+}
+
+.thumb {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.thumb > div {
+  transition: transform 0.3s;
+}
+
+.card:hover .thumb > div {
+  transform: scale(1.05);
+}
+
+.badge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-top: var(--space-3);
+}
+
+.category {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.name {
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.options {
+  font-size: var(--font-xs);
+  color: var(--text-faint);
+}

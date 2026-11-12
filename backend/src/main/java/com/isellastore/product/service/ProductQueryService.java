@@ -1,0 +1,80 @@
+package com.isellastore.product.service;
+
+import com.isellastore.global.error.ApiException;
+import com.isellastore.product.domain.Category;
+import com.isellastore.product.domain.Product;
+import com.isellastore.product.dto.ProductDto;
+import com.isellastore.product.repository.CategoryRepository;
+import com.isellastore.product.repository.ProductRepository;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Locale;
+import java.util.stream.Stream;
+
+/** 쇼핑몰 조회 전용. 옵션·조합을 함께 읽으므로 읽기 트랜잭션 안에서 DTO로 변환한다. */
+@Service
+@Transactional(readOnly = true)
+public class ProductQueryService {
+
+    private final ProductRepository products;
+    private final CategoryRepository categories;
+
+    public ProductQueryService(ProductRepository products, CategoryRepository categories) {
+        this.products = products;
+        this.categories = categories;
+    }
+
+    public List<Category> categories() {
+        return categories.findAllByOrderBySortOrderAsc();
+    }
+
+    /** sort: new(기본) | priceAsc | priceDesc | name */
+    public List<ProductDto> list(String category, String q, String sort) {
+        List<Product> found = (category == null || category.isBlank())
+                ? products.findByActiveTrueOrderByCreatedAtDesc()
+                : products.findByActiveTrueAndCategorySlugOrderByCreatedAtDesc(category);
+
+        Stream<Product> stream = found.stream();
+        if (q != null && !q.isBlank()) {
+            String needle = q.trim().toLowerCase(Locale.ROOT);
+            stream = stream.filter(p -> contains(p.getName(), needle) || contains(p.getDescription(), needle));
+        }
+        Comparator<Product> order = switch (sort == null ? "new" : sort) {
+            case "priceAsc" -> Comparator.comparingLong(Product::getPrice);
+            case "priceDesc" -> Comparator.comparingLong(Product::getPrice).reversed();
+            case "name" -> Comparator.comparing(Product::getName);
+            default -> null; // 이미 최신순
+        };
+        if (order != null) stream = stream.sorted(order);
+        return stream.map(ProductDto::from).toList();
+    }
+
+    public ProductDto detail(Long id) {
+        return ProductDto.from(findActive(id));
+    }
+
+    /** 같은 카테고리의 다른 상품 */
+    public List<ProductDto> related(Long id, int limit) {
+        Product p = findActive(id);
+        if (p.getCategory() == null) return List.of();
+        return products.findByActiveTrueAndCategorySlugOrderByCreatedAtDesc(p.getCategory().getSlug()).stream()
+                .filter(other -> !other.getId().equals(id))
+                .limit(Math.max(0, Math.min(limit, 12)))
+                .map(ProductDto::from)
+                .toList();
+    }
+
+    private Product findActive(Long id) {
+        return products.findById(id)
+                .filter(Product::isActive)
+                .orElseThrow(() -> ApiException.notFound("상품이 없습니다"));
+    }
+
+    private static boolean contains(String text, String needle) {
+        return text != null && text.toLowerCase(Locale.ROOT).contains(needle);
+    }
+}

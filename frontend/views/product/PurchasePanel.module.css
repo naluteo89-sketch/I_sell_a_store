@@ -1,0 +1,39 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.summary {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.qtyLabel,
+.hint {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+.total {
+  text-align: right;
+}
+
+.amount {
+  font-size: var(--font-xl);
+  font-weight: 700;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-2);
+}

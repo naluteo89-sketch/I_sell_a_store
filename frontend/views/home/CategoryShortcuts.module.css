@@ -1,0 +1,32 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.tile {
+  padding: var(--space-5);
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.tile:hover {
+  border-color: var(--brand);
+  color: var(--brand);
+}
+
+.hint {
+  display: block;
+  margin-top: var(--space-1);
+  font-size: var(--font-xs);
+  font-weight: 400;
+  color: var(--text-faint);
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
