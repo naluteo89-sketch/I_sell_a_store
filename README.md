@@ -5,21 +5,8 @@
 
 ```
 I_sell_a_store/
-├── backend/                 Spring Boot 3.5 · Java 21 · JPA · MySQL 8 (기본) / H2 / PostgreSQL
-│   ├── config/              이 컴퓨터 전용 설정 (DB 비밀번호 등, 깃 제외)
-│   ├── db/                  schema.sql(테이블 구조) · mysql-setup.sql(전용 계정)
-│   └── src/main/java/com/isellastore/
-│       ├── config/          StoreProperties(납품 설정값) · WebConfig(CORS)
-│       ├── site/            /api/site(브랜드·기능) · /api/health/db(DB 확인)
-│       ├── product/         상품·카테고리 (방문자 API + 관리자 API)
-│       ├── order/           주문·결제 처리
-│       ├── payment/         결제사 어댑터 (지금은 모의 결제)
-│       ├── youtube/         유튜브 검색·영상 캐시·매일 갱신 스케줄러
-│       └── seed/            카테고리 초기화 · 데모 상품 생성
-└── frontend/                Next.js 15 (App Router) · Tailwind CSS 4 · Zustand(장바구니)
-    ├── app/                 페이지 (홈 · 상품 목록/상세 · 장바구니 · 주문서 · 주문 완료)
-    ├── components/          화면 조각 (헤더 · 상품 카드/목록 · 유튜브 패널 등)
-    └── lib/                 API 호출 · 장바구니 저장소 · 금액 표시 · 공통 훅
+├── backend/    Spring Boot 3.5 (내장 Tomcat) · Java 21 · JPA · MySQL 8 (기본) / H2 / PostgreSQL
+└── frontend/   Next.js 15 (App Router) · Tailwind CSS 4 · Zustand(장바구니)
 ```
 
 ---
@@ -32,19 +19,33 @@ I_sell_a_store/
 - MySQL 8.0 (서비스 실행 중, root 비밀번호 설정 완료)
 - YouTube Data API v3 키 (없어도 실행은 됨, 영상 패널만 비어 있음)
 
-### MySQL 준비
-- `my_db` DB는 서버 첫 실행 때 **자동 생성**되고 테이블도 자동으로 만들어진다.
-- 전용 계정을 쓰려면 `backend/db/mysql-setup.sql`을 MySQL Command Line Client에서 실행.
+### MySQL 준비 (DB: `my_db`)
+- **테이블 구조의 기준은 `backend/db/schema.sql`** (v2 정규화, 테이블 15개). Workbench에서 한 번 실행한다.
+- 백엔드는 `ddl-auto=validate`라서 모델과 테이블이 다르면 시작하지 않고 어디가 다른지 알려준다.
+- DB 계정은 `backend/config/application.yml` (로컬 개발용 root/root, 일부러 깃에 포함 — 파일 안 설명 참고).
+- 전용 계정을 쓰려면 `backend/db/mysql-setup.sql` 실행.
+
+```
+category ─< product ─┬─< product_attribute                 사양 (소재, 원산지)
+                     ├─< product_option ─< product_option_value   옵션 (색상: 블랙/화이트)
+                     ├─< product_variant ─< variant_option_value  조합별 재고·추가금 (블랙+M)
+                     ├── product_youtube_setting           검색어·숨김
+                     └─< product_video >── youtube_video   영상 고정·제외·순위 / 영상 정보(공유)
+orders ─┬── order_shipping   받는 분·연락처·우편번호·주소1·주소2
+        ├─< order_item       주문 당시 상품명·옵션·단가 보관
+        └─< payment          결제 시도 이력
+admin_user                   관리자 계정 (BCrypt)
+```
 
 ### 백엔드 (http://localhost:8080)
 ```powershell
 cd backend
-$env:DB_PASSWORD="MySQL_root_비밀번호"     # PowerShell 기준
-$env:YOUTUBE_API_KEY="발급받은_키"
+$env:YOUTUBE_API_KEY="발급받은_키"     # PowerShell 기준 (DB 계정은 config/application.yml)
 mvn spring-boot:run
 ```
-- IntelliJ: `IsellastoreApplication` 실행 → Run Configuration의 Environment variables에
-  `DB_PASSWORD=...;YOUTUBE_API_KEY=...` 입력
+- STS/IntelliJ: `IsellastoreApplication` 실행 (Working directory = backend 폴더)
+- 연결 확인: http://localhost:8080/api/health/db
+- 연결·모델 테스트: `DbConnectionTest` (JUnit)
 - MySQL 없이 테스트만 할 때: `SPRING_PROFILES_ACTIVE=h2` (backend/data 폴더에 파일 DB 생성)
 
 ### 프론트엔드 (http://localhost:3000)
@@ -87,8 +88,30 @@ curl.exe -X DELETE "http://localhost:8080/api/admin/seed/demo"
 | 누르기 전엔 플레이어 미로드 | 썸네일 목록 → [실행하기] 클릭 시 iframe 생성 |
 | 관리자 큐레이션 | 영상 고정·제외·패널 숨김 API |
 
+### 관리자 화면 — http://localhost:3000/admin
+`frontend/.env.local`에 `NEXT_PUBLIC_ENABLE_ADMIN=true`일 때만 열린다.
+- 상품 등록·수정·판매중지 (등록 시 유튜브 검색 1회로 영상 목록 자동 생성)
+- 사양 행 편집, 옵션 입력(선택지 쉼표 구분) → **조합 표 자동 생성** (조합별 추가금·재고·SKU·판매여부)
+- 상품별 영상: 검색 결과 보기, **고정 / 제외**, 영상 주소로 직접 고정, 패널 숨기기, 다시 검색
+
+### 쇼핑몰 화면
+- 헤더 검색창(`/products?q=`), 주문조회, 모바일 카테고리 가로 스크롤
+- 목록: 정렬(최신·가격·이름), 품절 표시, 옵션 상품은 최저가 "~" 표시
+- 상세: 경로 표시, 사양 표, **옵션 버튼 선택**(재고 없는 조합은 흐리게), 선택 조합 가격·재고, 같은 카테고리 상품, 우측 유튜브 패널
+- 장바구니: 상품+옵션 조합 단위
+- 주문서: 받는 분·연락처·우편번호·기본주소·상세주소·요청사항, 결제수단(모의)
+- 주문조회(`/orders`): **주문번호 + 연락처**가 맞아야 조회 (주문번호만으로 개인정보 노출 안 됨)
+
 관리자 API (⚠️ 아직 인증 없음 — 운영 서버에 공개하기 전 Spring Security 추가 필요)
 ```
+GET  /api/products?category=&q=&sort=            목록 (sort: new|priceAsc|priceDesc|name)
+GET  /api/products/{id}/related                  같은 카테고리 상품
+POST /api/orders                                 주문서 생성 {shipping:{...}, items:[{productId, variantId, quantity}]}
+POST /api/orders/{orderNo}/pay                   결제 (재고 원자적 차감 → 모의 결제)
+GET  /api/orders/{orderNo}?phone=                주문 조회 (연락처 일치 시에만)
+GET  /api/admin/products                         관리자 목록 (판매중지 포함)
+POST /api/admin/products/{id}/activate           판매 재개
+GET  /api/admin/products/{id}/videos             영상 관리 정보 (검색 원본·고정·제외)
 POST /api/admin/products                         상품 등록 (등록 시 영상 캐시 자동 생성)
 PUT  /api/admin/products/{id}                    상품 수정
 DELETE /api/admin/products/{id}                  상품 내리기
@@ -114,7 +137,11 @@ PUT  /api/admin/products/{id}/videos/curation    {"pinnedVideoIds":[], "excluded
 ---
 
 ## 5. 다음 작업
-- [ ] 관리자 화면(상품·주문·영상 큐레이션) + 관리자 인증
+- [x] 관리자 화면(상품·옵션·조합·영상 큐레이션)
+- [x] DB 정규화(v2), 재고 동시성, 주문 조회 개인정보 보호
+- [ ] 관리자 로그인(세션 쿠키 + CSRF), 요청 횟수 제한, DB 전용계정, 보안 헤더
+- [ ] PWA(앱 설치), 아이폰 설치 안내, 애플페이 버튼
+- [ ] 주문 관리 화면
 - [ ] 상품 CSV 일괄 등록
 - [ ] 회원가입·로그인, 주문 내역
 - [ ] Shadcn UI 컴포넌트 적용, 테마 프리셋
