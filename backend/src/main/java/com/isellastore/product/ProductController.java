@@ -1,6 +1,7 @@
 package com.isellastore.product;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -9,8 +10,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+/** 조회 전용. 옵션·조합을 함께 읽으므로 읽기 트랜잭션 안에서 DTO로 변환한다. */
 @RestController
 @RequestMapping("/api")
+@Transactional(readOnly = true)
 public class ProductController {
 
     private final ProductRepository products;
@@ -73,7 +76,8 @@ public class ProductController {
     }
 
     private Product findActive(Long id) {
-        return products.findActive(id)
+        return products.findById(id)
+                .filter(Product::isActive)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "상품이 없습니다"));
     }
 

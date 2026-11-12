@@ -1,24 +1,27 @@
 package com.isellastore.product;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
     List<Product> findByActiveTrueOrderByCreatedAtDesc();
+
     List<Product> findByActiveTrueAndCategorySlugOrderByCreatedAtDesc(String slug);
+
+    List<Product> findByDemoTrue();
+
     boolean existsByName(String name);
 
-    /** 판매 중인 상품만 */
-    default Optional<Product> findActive(Long id) {
-        return findById(id).filter(Product::isActive);
-    }
-
-    /** 판매 여부와 관계없이 조회, 없으면 404 (관리자용) */
-    default Product getOrNotFound(Long id) {
-        return findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "상품이 없습니다"));
-    }
+    /**
+     * 옵션 없는 상품 재고를 원자적으로 차감. 재고가 모자라면 0을 반환한다.
+     * (동시에 여러 명이 결제해도 재고가 음수가 되지 않음)
+     */
+    @Modifying
+    @Query("update Product p set p.stock = p.stock - :qty where p.id = :id and p.stock >= :qty")
+    int decreaseStock(@Param("id") Long id, @Param("qty") int qty);
 }

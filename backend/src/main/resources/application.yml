@@ -12,8 +12,14 @@ spring:
     active: ${SPRING_PROFILES_ACTIVE:mysql}
   jpa:
     hibernate:
-      ddl-auto: update
+      # 테이블 구조의 기준은 backend/db/schema.sql.
+      # validate: 모델과 테이블이 다르면 서버가 시작되지 않고 어디가 다른지 알려준다 (DB를 몰래 바꾸지 않음)
+      ddl-auto: validate
     open-in-view: false
+    properties:
+      hibernate:
+        # 상품 목록에서 옵션·조합을 상품마다 따로 조회하지 않고 묶어서 가져온다 (N+1 방지)
+        default_batch_fetch_size: 100
 
 # ─────────────────────────────────────────────
 # 납품 시 고객별로 바꾸는 값은 전부 여기(또는 환경변수)에 모은다.
@@ -72,6 +78,10 @@ spring:
   h2:
     console:
       enabled: true
+  jpa:
+    hibernate:
+      # H2는 스크립트 없이 테스트하는 용도라 모델 기준으로 테이블을 자동 생성
+      ddl-auto: update
 
 ---
 spring:

@@ -17,8 +17,8 @@ import java.util.*;
  *
  * 1) 후보마다 "후보명 + 리뷰"를 조회수순으로 검색 (후보 1개 = search.list 1회 = 100 units)
  * 2) 검색된 영상 중 최고 조회수를 그 후보의 점수로 삼음
- * 3) 카테고리별 점수 상위 N개만 상품으로 등록
- * 4) 검색에 쓴 영상 목록을 그대로 상품 영상 캐시에 저장 → 추가 검색 없이 사이드 패널에 바로 표시
+ * 3) 카테고리별 점수 상위 N개만 상품으로 등록 (demo = true)
+ * 4) 검색에 쓴 영상 목록을 그대로 상품 영상으로 저장 → 추가 검색 없이 사이드 패널에 바로 표시
  *
  * 기본 후보 24개 = 검색 24회. 하루 기본 한도(100회) 안에서 실행된다.
  */
@@ -28,10 +28,7 @@ public class DemoSeedService {
     public record Ranked(String category, String name, long price, long topViewCount, String topVideoTitle,
                          boolean created) {}
 
-    /** 후보 1개의 검색 결과 (내부 계산용) */
-    private record Scored(DemoCandidates.Candidate candidate, String keyword, List<VideoInfo> videos, VideoInfo top) {
-        long topViewCount() { return top == null ? 0 : top.viewCount(); }
-    }
+    private record Scored(DemoCandidates.Candidate candidate, long topViews, String topTitle, List<VideoInfo> videos) {}
 
     private final DemoCandidates candidates;
     private final CategoryRepository categories;
@@ -58,45 +55,37 @@ public class DemoSeedService {
         List<Ranked> report = new ArrayList<>();
 
         for (var cat : candidates.load()) {
-            List<Scored> ranked = cat.candidates().stream()
-                    .map(this::score)
-                    .sorted(Comparator.comparingLong(Scored::topViewCount).reversed())
-                    .toList();
+            List<Scored> scored = new ArrayList<>();
+            for (var cand : cat.candidates()) {
+                List<VideoInfo> found = youtube.search(cand.name() + cfg.keywordSuffix(), cfg.maxResults(),
+                        YoutubeClient.Order.VIEW_COUNT);
+                VideoInfo top = found.stream().max(Comparator.comparingLong(VideoInfo::viewCount)).orElse(null);
+                scored.add(new Scored(cand, top == null ? 0 : top.viewCount(), top == null ? null : top.title(), found));
+            }
+            scored.sort(Comparator.comparingLong(Scored::topViews).reversed());
 
             var category = categories.findBySlug(cat.slug()).orElseThrow();
-            for (int i = 0; i < ranked.size(); i++) {
-                Scored s = ranked.get(i);
-                var cand = s.candidate();
-                boolean create = !dryRun && i < perCategory && s.topViewCount() > 0
-                        && !products.existsByName(cand.name());
-                if (create) {
-                    Product p = new Product(cand.name(), cand.description(), cand.price(), 100, category);
-                    p.getMetadata().put("demo", true);
-                    p.getMetadata().put("topReviewViewCount", s.topViewCount());
+            for (int i = 0; i < scored.size(); i++) {
+                Scored s = scored.get(i);
+                boolean pick = i < perCategory && s.topViews() > 0 && !products.existsByName(s.candidate().name());
+                if (pick && !dryRun) {
+                    var c = s.candidate();
+                    Product p = new Product(c.name(), c.description(), c.price(), 100, category);
+                    p.setDemo(true);
                     products.save(p);
-                    videoService.store(p.getId(), s.keyword(), s.videos());
+                    videoService.store(p, s.videos());
                 }
-                report.add(new Ranked(cat.name(), cand.name(), cand.price(), s.topViewCount(),
-                        s.top() == null ? null : s.top().title(), create));
+                report.add(new Ranked(cat.name(), s.candidate().name(), s.candidate().price(),
+                        s.topViews(), s.topTitle(), pick && !dryRun));
             }
         }
         return report;
     }
 
-    /** 후보명 + 리뷰를 조회수순으로 검색 (search.list 1회) */
-    private Scored score(DemoCandidates.Candidate cand) {
-        String keyword = videoService.defaultKeyword(cand.name());
-        List<VideoInfo> found = youtube.search(keyword, cfg.maxResults(), YoutubeClient.Order.VIEW_COUNT);
-        VideoInfo top = found.stream().max(Comparator.comparingLong(VideoInfo::viewCount)).orElse(null);
-        return new Scored(cand, keyword, found, top);
-    }
-
-    /** 데모 상품 전체 삭제 → 납품 시 고객 상품으로 교체하기 전에 사용 */
+    /** 데모 상품 판매중지 → 납품 시 고객 상품으로 교체하기 전에 사용 */
     @Transactional
     public int clearDemoProducts() {
-        List<Product> demo = products.findAll().stream()
-                .filter(p -> Boolean.TRUE.equals(p.getMetadata().get("demo")))
-                .toList();
+        List<Product> demo = products.findByDemoTrue();
         demo.forEach(p -> p.setActive(false));
         return demo.size();
     }
