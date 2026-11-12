@@ -1,0 +1,53 @@
+{
+  "_설명": "데모 상품 후보. 후보마다 유튜브를 조회수순으로 검색해 리뷰 영상 조회수가 높은 후보부터 카테고리별 상위 N개만 상품으로 등록한다. 납품 시 이 파일을 고객 업종 후보로 바꾸면 된다.",
+  "categories": [
+    {
+      "slug": "fashion",
+      "name": "패션",
+      "candidates": [
+        { "name": "오버핏 맨투맨", "price": 39000, "description": "데일리로 입기 좋은 오버핏 맨투맨" },
+        { "name": "와이드 데님 팬츠", "price": 49000, "description": "편안한 핏의 와이드 데님" },
+        { "name": "경량 패딩 조끼", "price": 59000, "description": "가볍고 따뜻한 레이어드용 패딩 조끼" },
+        { "name": "니트 가디건", "price": 45000, "description": "간절기에 걸치기 좋은 니트 가디건" },
+        { "name": "트렌치 코트", "price": 129000, "description": "클래식한 실루엣의 트렌치 코트" },
+        { "name": "러닝화", "price": 89000, "description": "쿠셔닝이 좋은 데일리 러닝화" }
+      ]
+    },
+    {
+      "slug": "goods",
+      "name": "잡화",
+      "candidates": [
+        { "name": "백팩", "price": 69000, "description": "노트북 수납이 되는 데일리 백팩" },
+        { "name": "크로스백", "price": 39000, "description": "가볍게 메는 미니 크로스백" },
+        { "name": "가죽 지갑", "price": 49000, "description": "슬림한 반지갑" },
+        { "name": "볼캡 모자", "price": 25000, "description": "어디에나 어울리는 기본 볼캡" },
+        { "name": "선글라스", "price": 59000, "description": "자외선 차단 데일리 선글라스" },
+        { "name": "스마트워치 스트랩", "price": 19000, "description": "교체용 실리콘 스트랩" }
+      ]
+    },
+    {
+      "slug": "living",
+      "name": "리빙",
+      "candidates": [
+        { "name": "무선 청소기", "price": 249000, "description": "가볍게 쓰는 무선 핸디 청소기" },
+        { "name": "에어프라이어", "price": 129000, "description": "기름 없이 바삭한 요리" },
+        { "name": "가습기", "price": 79000, "description": "조용한 대용량 가습기" },
+        { "name": "메모리폼 베개", "price": 49000, "description": "목을 편하게 받쳐주는 베개" },
+        { "name": "전기포트", "price": 39000, "description": "빠르게 끓는 스테인리스 전기포트" },
+        { "name": "무드등", "price": 29000, "description": "침실용 은은한 무드등" }
+      ]
+    },
+    {
+      "slug": "digital",
+      "name": "디지털",
+      "candidates": [
+        { "name": "무선 이어폰", "price": 99000, "description": "노이즈 캔슬링 무선 이어폰" },
+        { "name": "블루투스 스피커", "price": 79000, "description": "휴대용 방수 블루투스 스피커" },
+        { "name": "기계식 키보드", "price": 109000, "description": "타건감 좋은 기계식 키보드" },
+        { "name": "무선 마우스", "price": 39000, "description": "손에 편한 무선 마우스" },
+        { "name": "보조배터리", "price": 35000, "description": "고속충전 대용량 보조배터리" },
+        { "name": "태블릿 거치대", "price": 25000, "description": "각도 조절 태블릿 거치대" }
+      ]
+    }
+  ]
+}

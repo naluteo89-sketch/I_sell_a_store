@@ -1,0 +1,17 @@
+# backend
+backend/target/
+backend/data/
+# 이 컴퓨터 전용 비밀번호·키 설정
+backend/config/
+*.iml
+.idea/
+
+# frontend
+frontend/node_modules/
+frontend/.next/
+frontend/next-env.d.ts
+frontend/.env.local
+
+# common
+.env
+.DS_Store

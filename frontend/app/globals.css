@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/*
+ * 테마 토큰. 실제 값은 layout.tsx가 백엔드 브랜드 설정(/api/site)을 읽어
+ * <body style="--brand: ...; --accent: ..."> 로 주입한다.
+ * 납품 시 색상은 코드가 아니라 BRAND_PRIMARY_COLOR / BRAND_ACCENT_COLOR 값으로 바꾼다.
+ */
+:root {
+  --brand: #111827;
+  --accent: #ef4444;
+}
+
+@theme inline {
+  --color-brand: var(--brand);
+  --color-accent: var(--accent);
+}
+
+body {
+  @apply bg-white text-gray-900 antialiased;
+}
