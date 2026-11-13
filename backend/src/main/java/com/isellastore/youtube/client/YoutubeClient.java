@@ -49,6 +49,12 @@ public class YoutubeClient {
 
     /** search() 와 같지만 pageToken 으로 다음 페이지를 이어서 받는다. 페이지마다 100 units. */
     public SearchPage searchPage(String query, int maxResults, Order order, String pageToken) {
+        return searchPage(query, maxResults, order, pageToken, cfg.regionCode(), cfg.relevanceLanguage());
+    }
+
+    /** 지역·언어를 직접 지정 (영미권 유튜버: regionCode=US, relevanceLanguage=en) */
+    public SearchPage searchPage(String query, int maxResults, Order order, String pageToken,
+                                 String regionCode, String relevanceLanguage) {
         if (!enabled()) {
             log.warn("YOUTUBE_API_KEY가 없어 유튜브 검색을 건너뜁니다: {}", query);
             return new SearchPage(List.of(), Map.of(), null);
@@ -61,8 +67,8 @@ public class YoutubeClient {
                         .queryParam("q", "{q}")
                         .queryParam("maxResults", maxResults)
                         .queryParam("order", order == Order.VIEW_COUNT ? "viewCount" : "relevance")
-                        .queryParam("regionCode", cfg.regionCode())
-                        .queryParam("relevanceLanguage", cfg.relevanceLanguage())
+                        .queryParam("regionCode", regionCode)
+                        .queryParam("relevanceLanguage", relevanceLanguage)
                         .queryParam("key", "{key}")
                         .queryParamIfPresent("pageToken", Optional.ofNullable(pageToken))
                         // 한글·특수문자 검색어가 안전하게 인코딩되도록 변수로 넘김

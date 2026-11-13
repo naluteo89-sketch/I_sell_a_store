@@ -1,5 +1,6 @@
 package com.isellastore.sourcing;
 
+import com.isellastore.global.market.Market;
 import com.isellastore.sourcing.service.SourcingRules;
 import com.isellastore.sourcing.service.SourcingRules.Found;
 
@@ -120,5 +121,50 @@ class SourcingRulesTest {
     @Test
     void 테스트_가격은_7701원() {
         assertEquals(7_701, SourcingRules.TEST_PRICE);
+    }
+
+    // ───────── 영미권 유튜버 (US) ─────────
+
+    @Test
+    void 달러_가격은_센트로_읽는다() {
+        assertEquals(34_800L, SourcingRules.priceFrom("Sony WH-1000XM5 ($348)", Market.US));
+        assertEquals(2_999L, SourcingRules.priceFrom("only $29.99 right now", Market.US));
+        assertEquals(129_900L, SourcingRules.priceFrom("US$ 1,299", Market.US));
+        assertEquals(4_950L, SourcingRules.priceFrom("49.5 USD", Market.US));
+        assertNull(SourcingRules.priceFrom("I have 2000 subscribers", Market.US));
+        assertNull(SourcingRules.priceFrom("29,900원", Market.US));
+    }
+
+    @Test
+    void 달러는_원화로_바꾼_뒤_가격규칙() {
+        assertEquals(41_986L, SourcingRules.toKrw(Market.US, 2_999, 1_400));        // $29.99 × 1400
+        assertEquals(42_000L, SourcingRules.salePrice(SourcingRules.toKrw(Market.US, 2_999, 1_400)));
+        assertEquals(29_900L, SourcingRules.toKrw(Market.KR, 29_900, 1_400));      // 원화는 그대로
+    }
+
+    @Test
+    void 영어_설명란에서_제품을_뽑는다() {
+        String desc = """
+                PRODUCTS MENTIONED
+                1. Sony WH-1000XM5 ($348): https://amzn.to/abc
+                Dyson Airwrap Complete - https://amzn.to/def
+                Stanley Quencher Tumbler
+                https://amzn.to/ghi
+                Amazon storefront: https://amazon.com/shop/me
+                Use my code SAVE10 for 10% off!
+                Instagram: https://instagram.com/me
+                NAVY BLUE $45
+                I love this one so much: https://amzn.to/jkl
+                """;
+        assertEquals(List.of(
+                new Found("Sony WH-1000XM5", 34_800L),
+                new Found("Dyson Airwrap Complete", null),
+                new Found("Stanley Quencher Tumbler", null)
+        ), SourcingRules.productsFrom(desc, Market.US));
+    }
+
+    @Test
+    void 한국어_줄은_영어_시장에서_무시() {
+        assertEquals(List.of(), SourcingRules.productsFrom("메리노크루넥스웨터 - 19,900원", Market.US));
     }
 }

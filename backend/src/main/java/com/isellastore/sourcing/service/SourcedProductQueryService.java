@@ -1,5 +1,6 @@
 package com.isellastore.sourcing.service;
 
+import com.isellastore.global.market.Market;
 import com.isellastore.sourcing.dto.AdminSourcedItemDto;
 import com.isellastore.sourcing.dto.SourcedItemDto;
 import com.isellastore.sourcing.repository.SourcedProductRepository;
@@ -20,8 +21,11 @@ public class SourcedProductQueryService {
         this.sourced = sourced;
     }
 
-    public List<SourcedItemDto> forStore() {
-        return sourced.findByProductActiveTrueOrderByCreatedAtDesc().stream().map(SourcedItemDto::from).toList();
+    public List<SourcedItemDto> forStore(Market market) {
+        return sourced.findByProductActiveTrueOrderByCreatedAtDesc().stream()
+                .filter(s -> s.getProduct().soldIn(market))
+                .map(s -> SourcedItemDto.from(s, market))
+                .toList();
     }
 
     public List<AdminSourcedItemDto> forAdmin() {

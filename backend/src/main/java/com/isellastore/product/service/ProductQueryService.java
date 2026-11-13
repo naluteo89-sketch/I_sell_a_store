@@ -1,6 +1,7 @@
 package com.isellastore.product.service;
 
 import com.isellastore.global.error.ApiException;
+import com.isellastore.global.market.Market;
 import com.isellastore.product.domain.Category;
 import com.isellastore.product.domain.Product;
 import com.isellastore.product.dto.ProductDto;
@@ -32,39 +33,44 @@ public class ProductQueryService {
         return categories.findAllByOrderBySortOrderAsc();
     }
 
-    /** sort: new(기본) | priceAsc | priceDesc | name */
-    public List<ProductDto> list(String category, String q, String sort) {
+    /**
+     * 그 시장(lang)에 노출되는 상품만. 이름·설명도 그 언어로.
+     * q: 기본 이름·영어 이름·설명에서 검색 / sort: new(기본) | priceAsc | priceDesc | name
+     */
+    public List<ProductDto> list(Market market, String category, String q, String sort) {
         List<Product> found = (category == null || category.isBlank())
                 ? products.findByActiveTrueOrderByCreatedAtDesc()
                 : products.findByActiveTrueAndCategorySlugOrderByCreatedAtDesc(category);
 
-        Stream<Product> stream = found.stream();
+        Stream<Product> stream = found.stream().filter(p -> p.soldIn(market));
         if (q != null && !q.isBlank()) {
             String needle = q.trim().toLowerCase(Locale.ROOT);
-            stream = stream.filter(p -> contains(p.getName(), needle) || contains(p.getDescription(), needle));
+            stream = stream.filter(p -> contains(p.getName(), needle) || contains(p.getNameEn(), needle)
+                    || contains(p.descriptionFor(market), needle));
         }
         Comparator<Product> order = switch (sort == null ? "new" : sort) {
             case "priceAsc" -> Comparator.comparingLong(Product::getPrice);
             case "priceDesc" -> Comparator.comparingLong(Product::getPrice).reversed();
-            case "name" -> Comparator.comparing(Product::getName);
+            case "name" -> Comparator.comparing(p -> p.nameFor(market));
             default -> null; // 이미 최신순
         };
         if (order != null) stream = stream.sorted(order);
-        return stream.map(ProductDto::from).toList();
+        return stream.map(p -> ProductDto.from(p, market)).toList();
     }
 
-    public ProductDto detail(Long id) {
-        return ProductDto.from(findActive(id));
+    /** 다른 시장 상품이라도 링크로 들어오면 보여준다 (장바구니·주문 링크가 끊기지 않게). 이름만 그 언어로 */
+    public ProductDto detail(Market market, Long id) {
+        return ProductDto.from(findActive(id), market);
     }
 
-    /** 같은 카테고리의 다른 상품 */
-    public List<ProductDto> related(Long id, int limit) {
+    /** 같은 카테고리·같은 시장의 다른 상품 */
+    public List<ProductDto> related(Market market, Long id, int limit) {
         Product p = findActive(id);
         if (p.getCategory() == null) return List.of();
         return products.findByActiveTrueAndCategorySlugOrderByCreatedAtDesc(p.getCategory().getSlug()).stream()
-                .filter(other -> !other.getId().equals(id))
+                .filter(other -> !other.getId().equals(id) && other.soldIn(market))
                 .limit(Math.max(0, Math.min(limit, 12)))
-                .map(ProductDto::from)
+                .map(other -> ProductDto.from(other, market))
                 .toList();
     }
 

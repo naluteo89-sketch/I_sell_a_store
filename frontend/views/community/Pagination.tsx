@@ -4,8 +4,20 @@ import Link from "next/link";
 import { useI18n } from "@/controllers/useI18n";
 import styles from "./Pagination.module.css";
 
-export default function Pagination({ page, totalPages, hrefFor }: { page: number; totalPages: number; hrefFor: (p: number) => string }) {
+/**
+ * 페이지 이동. 서버 컴포넌트에서는 함수를 넘길 수 없으므로 baseHref(문자열)도 받는다 → ?page=N 을 붙임
+ */
+export default function Pagination({ page, totalPages, hrefFor: hrefForProp, baseHref }: {
+  page: number;
+  totalPages: number;
+  hrefFor?: (p: number) => string;
+  baseHref?: string;
+}) {
   const { t } = useI18n();
+  const hrefFor = hrefForProp ?? ((p: number) => {
+    const base = baseHref ?? "";
+    return p <= 1 ? base || "?" : `${base}${base.includes("?") ? "&" : "?"}page=${p}`;
+  });
   if (totalPages <= 1) return null;
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1).filter((p) => Math.abs(p - page) <= 2 || p === 1 || p === totalPages);
   return (

@@ -11,7 +11,8 @@ public record StoreProperties(
         String frontendOrigin,
         Brand brand,
         Features features,
-        Youtube youtube
+        Youtube youtube,
+        Sourcing sourcing
 ) {
     public record Brand(
             String name,
@@ -29,6 +30,12 @@ public record StoreProperties(
             boolean payment,
             boolean reviews,
             boolean youtubePanel
+    ) {}
+
+    /** 유튜브 소개 제품 수집 */
+    public record Sourcing(
+            /** 영미권 유튜버 설명란의 달러 가격 → 원화 환산 환율 (1달러 = ?원) */
+            long usdKrwRate
     ) {}
 
     public record Youtube(

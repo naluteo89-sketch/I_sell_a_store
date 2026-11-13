@@ -1,0 +1,51 @@
+.placeholder,
+.login,
+.account {
+  flex-shrink: 0;
+  height: 44px;
+  border-radius: var(--radius-full);
+}
+
+.placeholder {
+  width: 44px;
+}
+
+.login {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  color: var(--brand);
+  background: var(--brand-soft);
+  white-space: nowrap;
+  transition: background-color var(--duration) var(--ease);
+}
+
+.login:hover {
+  background: var(--brand-soft-strong);
+}
+
+.account {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  transition: background-color var(--duration) var(--ease);
+}
+
+.account:hover {
+  background: var(--bg);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: var(--font-sm);
+  font-weight: 900;
+  color: var(--brand);
+  border-radius: 50%;
+  background: var(--brand-soft-strong);
+  object-fit: cover;
+}

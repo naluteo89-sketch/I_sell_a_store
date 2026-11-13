@@ -1,5 +1,6 @@
 package com.isellastore.product.dto;
 
+import com.isellastore.global.market.Market;
 import com.isellastore.product.domain.Category;
 import com.isellastore.product.domain.Product;
 import com.isellastore.product.domain.ProductOptionValue;
@@ -31,10 +32,16 @@ public record ProductDto(
     public record Variant(Long id, String sku, String label, List<Long> optionValueIds,
                           long additionalPrice, long price, int stock) {}
 
+    /** 기본(한국어) 이름·설명 */
     public static ProductDto from(Product p) {
+        return from(p, Market.KR);
+    }
+
+    /** 이름·설명을 요청 언어(시장)로 채운다 */
+    public static ProductDto from(Product p, Market market) {
         Category c = p.getCategory();
         return new ProductDto(
-                p.getId(), p.getName(), p.getDescription(), p.getPrice(), p.totalStock(), p.getImageUrl(),
+                p.getId(), p.nameFor(market), p.descriptionFor(market), p.getPrice(), p.totalStock(), p.getImageUrl(),
                 c == null ? null : c.getSlug(),
                 c == null ? null : c.getName(),
                 p.getAttributes().stream().map(a -> new Attribute(a.getName(), a.getValue())).toList(),

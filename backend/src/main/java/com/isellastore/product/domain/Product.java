@@ -1,5 +1,7 @@
 package com.isellastore.product.domain;
 
+import com.isellastore.global.market.Market;
+
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -36,6 +38,16 @@ public class Product {
 
     /** 데모 상품 표시 (납품 전 일괄 삭제용) */
     private boolean demo = false;
+
+    /** 판매 시장 목록 "KR" · "US" · "KR,US" (lang=ko → KR, lang=en → US 상품만 노출) */
+    @Column(nullable = false, length = 20)
+    private String markets = Market.KR.name();
+
+    /** 영어 화면용 이름·설명 (없으면 기본 name·description) */
+    private String nameEn;
+
+    @Column(length = 4000)
+    private String descriptionEn;
 
     private Instant createdAt = Instant.now();
 
@@ -91,6 +103,20 @@ public class Product {
         return v;
     }
 
+    /** 이 시장에 노출되는 상품인지 */
+    public boolean soldIn(Market market) {
+        return ("," + markets + ",").contains("," + market.name() + ",");
+    }
+
+    /** 그 시장 언어의 이름 (영어가 없으면 기본 이름) */
+    public String nameFor(Market market) {
+        return market == Market.US && nameEn != null && !nameEn.isBlank() ? nameEn : name;
+    }
+
+    public String descriptionFor(Market market) {
+        return market == Market.US && descriptionEn != null && !descriptionEn.isBlank() ? descriptionEn : description;
+    }
+
     public Long getId() { return id; }
     public Category getCategory() { return category; }
     public String getName() { return name; }
@@ -100,6 +126,9 @@ public class Product {
     public String getImageUrl() { return imageUrl; }
     public boolean isActive() { return active; }
     public boolean isDemo() { return demo; }
+    public String getMarkets() { return markets; }
+    public String getNameEn() { return nameEn; }
+    public String getDescriptionEn() { return descriptionEn; }
     public Instant getCreatedAt() { return createdAt; }
     public List<ProductAttribute> getAttributes() { return attributes; }
     public List<ProductOption> getOptions() { return options; }
@@ -113,4 +142,7 @@ public class Product {
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public void setActive(boolean active) { this.active = active; }
     public void setDemo(boolean demo) { this.demo = demo; }
+    public void setMarkets(String markets) { this.markets = markets; }
+    public void setNameEn(String nameEn) { this.nameEn = nameEn; }
+    public void setDescriptionEn(String descriptionEn) { this.descriptionEn = descriptionEn; }
 }

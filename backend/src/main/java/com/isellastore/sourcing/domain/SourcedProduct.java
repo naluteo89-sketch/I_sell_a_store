@@ -1,5 +1,6 @@
 package com.isellastore.sourcing.domain;
 
+import com.isellastore.global.market.Market;
 import com.isellastore.product.domain.Product;
 
 import jakarta.persistence.*;
@@ -40,19 +41,30 @@ public class SourcedProduct {
     @Enumerated(EnumType.STRING)
     private PriceSource priceSource;
 
-    /** 설명란에서 찾은 원래 금액 (TEST 면 null) */
+    /** 어느 시장 유튜버 영상에서 찾았는지 (KR = 한국 유튜버, US = 영미권 유튜버) */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 2)
+    private Market market = Market.KR;
+
+    /** 설명란에서 찾은 원래 금액 (TEST 면 null). 단위: KRW = 원, USD = 센트 */
     private Long sourcePrice;
+
+    @Column(nullable = false, length = 3)
+    private String sourceCurrency = "KRW";
 
     private Instant createdAt = Instant.now();
 
     protected SourcedProduct() {}
 
-    public SourcedProduct(Product product, String videoId, String searchQuery, PriceSource priceSource, Long sourcePrice) {
+    public SourcedProduct(Product product, Market market, String videoId, String searchQuery,
+                          PriceSource priceSource, Long sourcePrice) {
         this.product = product;
+        this.market = market;
         this.videoId = videoId;
         this.searchQuery = searchQuery;
         this.priceSource = priceSource;
         this.sourcePrice = sourcePrice;
+        this.sourceCurrency = market == Market.US ? "USD" : "KRW";
     }
 
     public Long getId() { return id; }
@@ -60,6 +72,8 @@ public class SourcedProduct {
     public String getVideoId() { return videoId; }
     public String getSearchQuery() { return searchQuery; }
     public PriceSource getPriceSource() { return priceSource; }
+    public Market getMarket() { return market; }
     public Long getSourcePrice() { return sourcePrice; }
+    public String getSourceCurrency() { return sourceCurrency; }
     public Instant getCreatedAt() { return createdAt; }
 }

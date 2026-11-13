@@ -15,9 +15,10 @@ import VideoCollectionGrid from "@/views/video/VideoCollectionGrid";
 
 export default async function HomePage() {
   const { t, locale } = await getI18n();
-  const [site, products, categories, collections] = await Promise.all([
+  const [site, { items: products }, categories, collections] = await Promise.all([
     fetchSite(locale),
-    fetchProducts(locale),
+    // 영상당 1개만 남기므로 넉넉히 받아 둔다
+    fetchProducts(locale, { size: 60 }),
     fetchCategories(locale),
     fetchVideoCollections(locale, { limit: 4 }),
   ]);

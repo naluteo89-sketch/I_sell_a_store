@@ -59,6 +59,9 @@ export type Product = {
   options: ProductOption[];
   variants: ProductVariant[];
   /** 이 상품을 소개한 대표 리뷰 영상 (같은 영상 상품 묶기에 사용, 백엔드가 주면 활용) */
+  /** 대표 영상 조회수·유튜버 이름 (목록 API) */
+  videoViewCount?: number;
+  channelTitle?: string;
   primaryVideoId?: string | null;
 };
 
@@ -253,3 +256,24 @@ export type CommunityPostForm = {
 };
 
 export type CommunityCommentForm = { author: string; password: string; body: string };
+
+/* ───────── 로그인 · SSO (규격: docs/auth-api.md) ───────── */
+
+/** 지원하는 소셜 로그인. 실제로 켜진 목록은 백엔드 /api/auth/providers 가 정한다 */
+export type AuthProviderId = "google" | "kakao" | "naver" | "apple";
+
+export type AuthUser = {
+  id: number;
+  email: string;
+  /** 가입 때 자동 생성, 내 계정에서 변경 가능 */
+  nickname: string;
+  avatarUrl?: string | null;
+  /** 이 계정에 연결된 로그인 방식: "password" + 소셜 id */
+  providers: ("password" | AuthProviderId)[];
+  role?: "USER" | "ADMIN";
+};
+
+export type LoginForm = { email: string; password: string; remember: boolean };
+export type SignupForm = { email: string; password: string; nickname: string; agreePrivacy: boolean };
+
+export type NicknameStatus = "AVAILABLE" | "INVALID" | "TAKEN";

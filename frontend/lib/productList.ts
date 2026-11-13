@@ -8,6 +8,13 @@ export type ListQuery = { category?: string; q?: string; sort?: string };
 export const isSort = (v: unknown): v is ProductSort => SORT_IDS.includes(v as ProductSort);
 
 /** 현재 조건을 유지한 채 일부만 바꾼 목록 주소 */
+/** 같은 조건의 다른 페이지 (조건을 바꾸는 listHref 는 항상 1페이지로 돌아간다) */
+export function pageHref(current: ListQuery, page: number) {
+  const base = listHref(current, {});
+  if (page <= 1) return base;
+  return `${base}${base.includes("?") ? "&" : "?"}page=${page}`;
+}
+
 export function listHref(current: ListQuery, patch: ListQuery) {
   const merged = { ...current, ...patch };
   const qs = new URLSearchParams();

@@ -1,5 +1,7 @@
 package com.isellastore.sourcing.service;
 
+import com.isellastore.global.config.StoreProperties;
+import com.isellastore.global.market.Market;
 import com.isellastore.product.domain.Product;
 import com.isellastore.product.repository.CategoryRepository;
 import com.isellastore.product.repository.ProductRepository;
@@ -28,15 +30,17 @@ public class SourcingWriter {
     private final SourcedProductRepository sourced;
     private final ProductVideoService videos;
     private final SourcingCursorRepository cursors;
+    private final long usdKrwRate;
 
     public SourcingWriter(ProductRepository products, CategoryRepository categories,
                           SourcedProductRepository sourced, ProductVideoService videos,
-                          SourcingCursorRepository cursors) {
+                          SourcingCursorRepository cursors, StoreProperties props) {
         this.products = products;
         this.categories = categories;
         this.sourced = sourced;
         this.videos = videos;
         this.cursors = cursors;
+        this.usdKrwRate = props.sourcing().usdKrwRate();
     }
 
     // ───────── 검색어별 진행 위치 ─────────
@@ -68,19 +72,23 @@ public class SourcingWriter {
     }
 
     /**
-     * @param sourcePrice 설명란에서 찾은 금액 (null 이면 테스트 가격)
+     * @param market      KR = 한국 유튜버(한국 시장 상품), US = 영미권 유튜버(영미권 시장 상품, 영어 이름)
+     * @param sourcePrice 설명란에서 찾은 금액 (KR=원, US=센트, null 이면 테스트 가격)
      * @return 같은 이름 상품이 이미 있으면 false
      */
     @Transactional
-    public boolean register(String categorySlug, String name, VideoInfo video, Long sourcePrice) {
+    public boolean register(Market market, String categorySlug, String name, VideoInfo video, Long sourcePrice) {
         if (products.existsByName(name)) return false;
 
         PriceSource priceSource = sourcePrice == null ? PriceSource.TEST : PriceSource.DESCRIPTION;
-        long price = sourcePrice == null ? SourcingRules.TEST_PRICE : SourcingRules.salePrice(sourcePrice);
+        long price = sourcePrice == null ? SourcingRules.TEST_PRICE
+                : SourcingRules.salePrice(SourcingRules.toKrw(market, sourcePrice, usdKrwRate));
 
         Product p = new Product(name, null, price, DEMO_STOCK, categories.findBySlug(categorySlug).orElse(null));
         p.setImageUrl(SourcingRules.thumbnailUrl(video.videoId()));
         p.setDemo(true);
+        p.setMarkets(market.name());
+        if (market == Market.US) p.setNameEn(name);
         products.save(p);
 
         // 제품을 소개한 영상을 상품 영상 패널에 연결 (추가 검색 없음).
@@ -88,7 +96,7 @@ public class SourcingWriter {
         videos.updateKeyword(p, name);
         videos.store(p, List.of(video));
 
-        sourced.save(new SourcedProduct(p, video.videoId(), name, priceSource, sourcePrice));
+        sourced.save(new SourcedProduct(p, market, video.videoId(), name, priceSource, sourcePrice));
         return true;
     }
 }

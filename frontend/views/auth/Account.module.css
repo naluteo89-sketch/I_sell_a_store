@@ -1,0 +1,88 @@
+.wait {
+  display: grid;
+  place-items: center;
+  min-height: 40vh;
+  color: var(--text-muted);
+}
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  font-size: var(--font-xl);
+  font-weight: 900;
+  color: var(--brand);
+  border-radius: 50%;
+  background: var(--brand-soft-strong);
+  object-fit: cover;
+}
+
+.name {
+  font-size: var(--font-lg);
+  font-weight: 800;
+}
+
+.nickRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.nickForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.nickActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+}
+
+.saved {
+  min-height: 1em;
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: var(--success);
+}
+
+.subhead {
+  margin-bottom: var(--space-2);
+  padding-left: var(--space-3);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.methods {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  list-style: none;
+}
+
+.method {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  background: var(--bg);
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}

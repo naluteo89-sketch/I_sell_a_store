@@ -3,6 +3,13 @@ server:
   error:
     # 프론트에 "재고 부족" 같은 사유를 보여주기 위해
     include-message: always
+  servlet:
+    session:
+      # 로그인 세션: 2시간 동안 아무 요청이 없으면 만료 ("로그인 상태 유지"를 고르면 14일)
+      timeout: 2h
+      cookie:
+        http-only: true
+        same-site: lax
 
 spring:
   application:
@@ -52,6 +59,9 @@ store:
     daily-refresh-budget: 40
     region-code: KR
     relevance-language: ko
+  sourcing:
+    # 영미권 유튜버 설명란의 달러 가격 → 원화 환산 (1달러 = ?원). 그 뒤 원화 가격 규칙 적용
+    usd-krw-rate: ${USD_KRW_RATE:1400}
 
 ---
 # MySQL 8 (로컬 설치본). 테이블 구조는 backend/db/schema.sql 참고.

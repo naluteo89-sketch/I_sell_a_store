@@ -26,7 +26,9 @@
   `/api/site`, `/api/categories`, `/api/products`, `/api/products/{id}`, `/api/products/{id}/related`, `/api/products/{id}/videos`, `/api/videos`, `/api/videos/{videoId}`, `/api/community/posts`
 - `Product` 응답의 `name`·`description` 은 요청 언어로 채워서 보낸다.
 
-### 상품 목록 `GET /api/products?lang=&category=&q=&sort=`
+### 상품 목록 `GET /api/products?lang=&category=&q=&sort=&page=&size=`
+> **구현됨 (2026-11-13, `backend/.../catalog`)** — 정렬·검색·페이지 나눔을 SQL 한 번으로 처리. 응답은 배열 그대로, 전체 개수는 `X-Total-Count` 헤더. `page` 1부터, `size` 기본 40·최대 100.
+> 유튜버 인기(`channelViews`) = 그 채널이 우리 카탈로그에 올린 영상들의 조회수 합계 (채널 ID·구독자 수를 저장하게 되면 교체).
 - `q`: **상품명 + 연결된 영상의 유튜버(채널) 이름**으로 검색
 - `sort`: `new`(기본) · `videoViews`(대표 리뷰 영상 조회수순) · `channelViews`(유튜버 인기순) · `priceAsc` · `priceDesc` · `name`
 - 응답 `Product` 에 추가 (선택): `primaryVideoId` — 이 상품을 소개한 대표 영상 ID. 홈 "새로 들어온 상품"에서 **영상당 1개만** 보이게 하는 데 쓴다.
@@ -39,6 +41,7 @@
 `productCount` 가 2 이상이면 패널에 "이 영상 속 상품 N개 모아보기" 링크가 뜬다.
 
 ### 영상 모아보기 목록 `GET /api/videos?lang=&minProducts=2&limit=24&sort=&q=`
+> **구현됨 (2026-11-13)** — 목록·상세 모두. `new` 정렬 = 가장 최근에 상품이 붙은 영상 순.
 - `minProducts`: 연결 상품이 이 개수 이상인 영상만 (기본 2, 검색 시 프론트는 1)
 - `sort`: `views`(기본, 영상 조회수순) · `channelViews`(유튜버 인기순) · `new`
 - `q`: 영상 제목 + 유튜버 이름

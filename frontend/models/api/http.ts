@@ -15,6 +15,15 @@ export async function get<T>(path: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
+/** 목록 API: 본문(배열) + 전체 개수(X-Total-Count 헤더) */
+export async function getPage<T>(path: string): Promise<{ items: T[]; total: number }> {
+  const res = await fetch(`${API_BASE}${path}`, { cache: "no-store" });
+  if (!res.ok) throw await toError(res);
+  const items = (await res.json()) as T[];
+  const header = Number(res.headers.get("X-Total-Count"));
+  return { items, total: Number.isFinite(header) && header > 0 ? header : items.length };
+}
+
 export async function send<T>(path: string, method: "POST" | "PUT" | "DELETE", body?: unknown): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, {
     method,

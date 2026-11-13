@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useI18n } from "@/controllers/useI18n";
 import type { Category, Site } from "@/models/types";
+import AccountLink from "./AccountLink";
 import CartLink from "./CartLink";
 import CategoryNav from "./CategoryNav";
 import LanguageSwitcher from "./LanguageSwitcher";
@@ -33,6 +34,7 @@ export default function Header({ site, categories }: { site: Site; categories: C
           </Link>
         </nav>
         <LanguageSwitcher />
+        <AccountLink />
         {features.cart && <CartLink />}
       </div>
       <CategoryNav categories={categories} variant="mobile" />

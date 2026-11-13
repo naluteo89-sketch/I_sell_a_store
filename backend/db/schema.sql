@@ -42,6 +42,7 @@ DROP TABLE IF EXISTS product_attribute;
 DROP TABLE IF EXISTS product;
 DROP TABLE IF EXISTS category;
 DROP TABLE IF EXISTS admin_user;
+DROP TABLE IF EXISTS member;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ============================================================
@@ -67,6 +68,9 @@ CREATE TABLE product (
     image_url    VARCHAR(1000) NULL,
     active       BIT(1)        NOT NULL DEFAULT b'1' COMMENT '판매 중',
     demo         BIT(1)        NOT NULL DEFAULT b'0' COMMENT '데모 상품 (납품 전 일괄 삭제용)',
+    markets      VARCHAR(20)   NOT NULL DEFAULT 'KR' COMMENT '판매 시장 KR · US · KR,US (lang=ko → KR, lang=en → US)',
+    name_en      VARCHAR(255)  NULL     COMMENT '영어 화면용 이름 (없으면 name)',
+    description_en VARCHAR(4000) NULL   COMMENT '영어 화면용 설명 (없으면 description)',
     created_at   DATETIME(6)   NULL,
     PRIMARY KEY (id),
     KEY idx_product_active_created (active, created_at),
@@ -188,7 +192,9 @@ CREATE TABLE sourced_product (
     video_id      VARCHAR(20)  NOT NULL COMMENT '제품을 소개한 유튜브 영상 ID (ID만 보관, 영상 1개 → 제품 여러 개 가능)',
     search_query  VARCHAR(255) NULL     COMMENT '설명란에서 뽑은 제품명 (나중에 가격 찾을 때 검색어)',
     price_source  ENUM ('DESCRIPTION', 'TEST') NULL COMMENT 'DESCRIPTION=설명란 금액+가격규칙, TEST=테스트 가격 7701원',
-    source_price  BIGINT       NULL     COMMENT '설명란에서 찾은 원래 금액 (TEST 면 NULL)',
+    market        VARCHAR(2)   NOT NULL DEFAULT 'KR' COMMENT 'KR=한국 유튜버, US=영미권 유튜버',
+    source_price  BIGINT       NULL     COMMENT '설명란에서 찾은 원래 금액 (TEST 면 NULL). KRW=원, USD=센트',
+    source_currency VARCHAR(3) NOT NULL DEFAULT 'KRW',
     created_at    DATETIME(6)  NULL,
     PRIMARY KEY (id),
     KEY idx_sourced_video (video_id),
@@ -301,3 +307,23 @@ INSERT INTO category (slug, name, sort_order) VALUES
 -- 확인
 SHOW TABLES;
 SELECT * FROM category ORDER BY sort_order;
+
+-- ============================================================
+-- 회원 (로그인)
+-- ============================================================
+
+CREATE TABLE member (
+    id                BIGINT       NOT NULL AUTO_INCREMENT,
+    email             VARCHAR(254) NOT NULL COMMENT '소문자로 저장',
+    nickname          VARCHAR(30)  NOT NULL COMMENT '가입 때 자동 생성 (예: 포근한고래4821)',
+    password_hash     VARCHAR(200) NULL     COMMENT '{pbkdf2}… 소셜 전용 회원은 NULL',
+    avatar_url        VARCHAR(500) NULL,
+    role              VARCHAR(10)  NOT NULL DEFAULT 'USER',
+    lang              VARCHAR(5)   NOT NULL DEFAULT 'ko',
+    privacy_agreed_at DATETIME(6)  NULL,
+    created_at        DATETIME(6)  NULL,
+    last_login_at     DATETIME(6)  NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_member_email (email),
+    UNIQUE KEY uk_member_nickname (nickname)
+) ENGINE = InnoDB COMMENT = '쇼핑몰 회원';

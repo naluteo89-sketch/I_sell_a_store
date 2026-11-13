@@ -28,7 +28,7 @@ export default function FormField({
 }) {
   const { t } = useI18n();
   const id = useId();
-  const hintId = hint ? `${id}-hint` : undefined;
+  const hintId = hint && !error ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
   const describedBy = [errorId, hintId].filter(Boolean).join(" ") || undefined;
 
@@ -48,7 +48,7 @@ export default function FormField({
           {error}
         </p>
       )}
-      {hint && (
+      {hint && !error && (
         <p id={hintId} className={styles.hint}>
           {hint}
         </p>
