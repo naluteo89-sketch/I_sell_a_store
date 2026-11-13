@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 첫 화면이 하얗게 번쩍이지 않도록 다크 고딕 바탕색으로 시작 (Compose 테마가 이어받음) -->
+    <style name="Theme.You_HOWMUCH" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/yhm_bg</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>
