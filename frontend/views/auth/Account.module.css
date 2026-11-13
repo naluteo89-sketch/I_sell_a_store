@@ -20,7 +20,7 @@
   height: 56px;
   font-size: var(--font-xl);
   font-weight: 900;
-  color: var(--brand);
+  color: var(--brand-ink);
   border-radius: 50%;
   background: var(--brand-soft-strong);
   object-fit: cover;

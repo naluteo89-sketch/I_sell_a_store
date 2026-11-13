@@ -80,7 +80,7 @@
 }
 
 .optionOn {
-  color: var(--brand);
+  color: var(--brand-ink);
   background: var(--brand-soft);
   box-shadow: inset 0 0 0 1.5px var(--brand);
 }

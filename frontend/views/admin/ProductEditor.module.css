@@ -50,7 +50,7 @@
   padding: 4px;
   object-fit: contain;
   border-radius: var(--radius-sm);
-  background: #fff;
+  background: var(--surface-image);
   box-shadow: inset 0 0 0 1px var(--border);
 }
 

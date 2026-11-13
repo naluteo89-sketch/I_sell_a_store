@@ -18,7 +18,7 @@ export default function YoutubePanel({ productId }: { productId: number }) {
   return (
     <aside className={styles.panel}>
       <div className={styles.head}>
-        <h2 className={styles.title}>{t.youtube.title}</h2>
+        <h2 className={styles.title} data-font="plain">{t.youtube.title}</h2>
         <span className={styles.source}>
           <svg width="16" height="12" viewBox="0 0 16 12" aria-hidden>
             <rect width="16" height="12" rx="4" fill="currentColor" />

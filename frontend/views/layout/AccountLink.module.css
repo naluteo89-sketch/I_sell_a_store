@@ -16,14 +16,15 @@
   padding: 0 var(--space-4);
   font-size: var(--font-sm);
   font-weight: 700;
-  color: var(--brand);
-  background: var(--brand-soft);
+  color: var(--btn-soft-fg);
+  background: var(--btn-soft-bg);
+  box-shadow: var(--edge);
   white-space: nowrap;
   transition: background-color var(--duration) var(--ease);
 }
 
 .login:hover {
-  background: var(--brand-soft-strong);
+  background: var(--btn-soft-bg-hover);
 }
 
 .account {
@@ -44,7 +45,7 @@
   height: 32px;
   font-size: var(--font-sm);
   font-weight: 900;
-  color: var(--brand);
+  color: var(--brand-ink);
   border-radius: 50%;
   background: var(--brand-soft-strong);
   object-fit: cover;

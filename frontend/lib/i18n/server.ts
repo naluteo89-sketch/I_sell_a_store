@@ -4,7 +4,8 @@ import { createI18n, type I18n } from "./i18n";
 
 export async function getLocale(): Promise<Locale> {
   const [c, h] = await Promise.all([cookies(), headers()]);
-  return resolveLocale(c.get(LOCALE_COOKIE)?.value, h.get("accept-language"));
+  const country = h.get("x-vercel-ip-country") ?? h.get("cf-ipcountry");
+  return resolveLocale(c.get(LOCALE_COOKIE)?.value, h.get("accept-language"), country);
 }
 
 /** 서버 컴포넌트(page.tsx, layout.tsx)용 */

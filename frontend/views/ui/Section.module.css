@@ -11,9 +11,12 @@
   margin-bottom: var(--space-6);
 }
 
+/* 섹션 제목: 보통 서체를 굵게 — 특별한 서체는 로고·페이지 큰 제목에만 */
 .title {
+  font-family: var(--font-family);
   font-size: var(--font-2xl);
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .sub {

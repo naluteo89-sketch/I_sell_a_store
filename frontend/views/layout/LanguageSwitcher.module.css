@@ -4,7 +4,8 @@
   gap: 2px;
   padding: 3px;
   border-radius: var(--radius-full);
-  background: var(--bg);
+  background: var(--control-bg);
+  box-shadow: var(--edge);
 }
 
 .option,

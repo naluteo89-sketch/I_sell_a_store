@@ -64,9 +64,9 @@
   overflow: hidden;
   font-size: var(--font-xs);
   font-weight: 800;
-  color: var(--brand);
+  color: var(--brand-ink);
   border-radius: 50%;
-  background: #fff;
+  background: var(--surface-image);
   box-shadow: 0 0 0 2px var(--surface), var(--shadow-sm);
 }
 
@@ -84,5 +84,5 @@
 .count {
   font-size: var(--font-sm);
   font-weight: 800;
-  color: var(--brand);
+  color: var(--brand-ink);
 }

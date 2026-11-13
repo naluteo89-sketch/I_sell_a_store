@@ -15,7 +15,7 @@
 
 .count {
   margin-left: var(--space-1);
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 
 .empty {

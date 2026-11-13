@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
+import FrameImg from "@/views/ui/FrameImg";
 import { useI18n } from "@/controllers/useI18n";
 import type { VideoCollection } from "@/models/types";
 import VideoThumb from "./VideoThumb";
@@ -24,7 +25,7 @@ export default function VideoCollectionCard({ collection }: { collection: VideoC
           <span className={styles.stack} aria-hidden>
             {preview.map((p) => (
               <span key={p.id} className={styles.dot}>
-                {p.imageUrl ? <img src={p.imageUrl} alt="" width={36} height={36} loading="lazy" /> : p.name.slice(0, 1)}
+                {p.imageUrl ? <FrameImg url={p.imageUrl} alt="" width={36} height={36} loading="lazy" /> : p.name.slice(0, 1)}
               </span>
             ))}
           </span>

@@ -15,3 +15,6 @@ frontend/.env.local
 # common
 .env
 .DS_Store
+
+# 노션 업로드용 임시 스크린샷 (README용은 docs/images)
+frontend/public/_shots/

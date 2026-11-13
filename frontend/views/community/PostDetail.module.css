@@ -69,7 +69,7 @@
   padding: var(--space-3) var(--space-5);
   border-radius: var(--radius-full);
   background: var(--brand-soft);
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 
 .productLabel {

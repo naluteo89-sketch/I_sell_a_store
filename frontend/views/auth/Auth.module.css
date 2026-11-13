@@ -92,7 +92,7 @@
 }
 
 .reveal[aria-pressed="true"] {
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 
 .note {
@@ -132,7 +132,7 @@
 }
 
 .reroll:hover:not(:disabled) {
-  color: var(--brand);
+  color: var(--brand-ink);
   background: var(--bg-muted);
 }
 
@@ -199,7 +199,7 @@
 
 .switch {
   font-weight: 800;
-  color: var(--brand);
+  color: var(--brand-ink);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--brand) 35%, transparent);
   text-underline-offset: 3px;

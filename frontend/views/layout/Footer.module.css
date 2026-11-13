@@ -19,7 +19,7 @@
   font-size: var(--font-lg);
   font-weight: 900;
   letter-spacing: -0.03em;
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 
 .tagline {
@@ -35,7 +35,7 @@
 }
 
 .links a:hover {
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 
 .meta {
@@ -51,4 +51,14 @@
     grid-template-columns: 1.2fr 1fr 1.2fr;
     align-items: start;
   }
+}
+
+.mail {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 3px;
+}
+
+.mail:hover {
+  color: var(--brand-ink);
 }

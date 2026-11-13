@@ -1,60 +1,166 @@
 /*
- * 디자인 토큰 — "안개빛 + 둥근 형태"
- * 고객별 디자인을 바꿀 때는 이 파일만 고친다.
- * --brand / --accent 는 백엔드 브랜드 설정으로 layout.tsx 에서 덮어쓴다.
+ * 디자인 토큰 — you_HOWMUCH
  *
- * 원칙
- *  - 직각 없음: 컨트롤은 알약형(--radius-full), 면은 20~36px 라운드
- *  - 선 대신 면: 흰 면(--surface)이 안개빛 배경(--bg) 위에 떠 있는 구조, 테두리는 최소화
- *  - 그림자는 글자색(슬레이트) 기반으로 아주 옅게, 두 겹
+ * 다크(기본) "고딕 누아르": 붉은 기운의 검정 · 뼈색 글자 · 크림슨 버튼 · 옥스블러드 포인트 · 붉은 안개 바탕
+ * 라이트 "화이트 초콜릿": 브라운을 섞은 아이보리 · 다크 코코아 글자 · 다크 초콜릿 버튼 · 캐러멜 코코아 포인트
+ *
+ * <html data-theme="light"> 일 때만 라이트, 그 밖은 다크 (layout.tsx 가 쿠키를 읽어 첫 화면부터 맞춤)
+ * --brand / --accent 는 백엔드 브랜드 설정이 있으면 layout.tsx 에서 덮어쓴다.
+ * 모든 글자색은 배경·면·옅은 면 위에서 4.5:1 이상 (WCAG 1.4.3) — 계산값은 주석 참고
  */
-:root {
+/* 다크 "고딕 누아르": 검정에 핏빛 레드를 섞는다 — 바탕·면·선·그림자 모두 붉은 기운 */
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+
   /* 브랜드 */
-  --brand: #3d5a80;
-  --accent: #e98a95;
+  --brand: #dc143c; /* 크림슨 — 주 버튼·선택된 탭 바탕 (흰 글자 5.0) */
   --on-brand: #ffffff;
-  --brand-soft: color-mix(in srgb, var(--brand) 9%, #ffffff);
-  --brand-soft-strong: color-mix(in srgb, var(--brand) 16%, #ffffff);
-  --accent-soft: color-mix(in srgb, var(--accent) 14%, #ffffff);
-  /* 흰 아이콘·글자를 올릴 때 쓰는 진한 포인트 (대비 4.5:1 이상) */
-  --accent-strong: color-mix(in srgb, var(--accent) 60%, #3a1a1f);
+  /* 크림슨을 글자로 쓸 때: 어두운 면 위에서 읽히도록 한 단계 밝게 (배경 6.4 / 옅은 면 5.3) */
+  --brand-ink: #ff5560;
+  --accent: #8e1730; /* 옥스블러드 — 배지·재생 버튼 (흰 글자 9.1) */
+  --accent-text: #ff6168; /* 어두운 면 위 포인트 글자 (배경 6.9 / 옅은 면 5.6) */
+  --accent-strong: #6e1024;
+  --brand-soft: color-mix(in srgb, var(--brand) 16%, var(--surface));
+  --brand-soft-strong: color-mix(in srgb, var(--brand) 26%, var(--surface));
+  --accent-soft: color-mix(in srgb, var(--accent) 34%, var(--surface));
 
-  /* 글자 */
-  --text: #26313a;
-  /* 명도 대비(WCAG 1.4.3): 흰색·배경 위에서 모두 4.5:1 이상 */
-  --text-muted: #56616b;
-  --text-faint: #606c77;
+  /* 글자 (어두운 화면에서 묻히지 않게 한 단계 밝게) */
+  --text: #f4eaec; /* 15.6 */
+  --text-muted: #cbb5ba; /* 9.5 */
+  --text-faint: #b39ca4; /* 7.2 */
 
-  /* 면 */
-  --bg: #f4f6f8;
-  --surface: #ffffff;
-  --bg-soft: #f8fafb;
-  --bg-muted: #eceff3;
-  --border: #e3e8ed;
-  --border-strong: #c9d1d9;
+  /* 면 (모두 붉은 기운이 도는 검정) */
+  --bg: #0b0607;
+  --surface: #1f1016;
+  --bg-soft: #120809;
+  --bg-muted: #30181f;
+  --border: #4d2631;
+  --border-strong: #74394a;
+  --surface-image: #1d0f14;
+  --chip-bg: rgba(20, 6, 8, 0.8);
+  --chip-fg: #f1e6e8;
+  --overlay: rgba(10, 2, 4, 0.66);
+  --hairline: inset 0 0 0 1px rgba(220, 20, 60, 0.26);
+  /* 컨트롤 윤곽선: 검은 바탕 위에서 탭·검색창·토글이 또렷하게 */
+  --edge: inset 0 0 0 1px rgba(255, 214, 222, 0.24);
+  /* 버튼·컨트롤: 검은 바탕에서도 흰 기운이 돌게 (반투명 흰 면 + 흰 글자) */
+  --btn-soft-bg: rgba(255, 255, 255, 0.11);
+  --btn-soft-bg-hover: rgba(255, 255, 255, 0.18);
+  --btn-soft-fg: #ffffff;
+  --control-bg: rgba(255, 255, 255, 0.07);
+  --control-fg: #f4eaec;
+
+  /* 서체 — 다크 EN: 몬스터 캔·리퀴드 데스 느낌 (로고 Metal Mania, 제목 Anton + 검은고딕). 한국어 화면은 아래 :lang(ko) 규칙 */
+  --font-display: var(--font-anton, "Anton"), var(--font-blackhan, "Black Han Sans"), "Apple SD Gothic Neo", sans-serif;
+  --font-logo: var(--font-metal, "Metal Mania"), var(--font-anton, "Anton"), sans-serif;
+  --display-tracking: 0.01em;
+  --logo-glow: none;
+
+  /* 페이지 바탕: 위에서 번지는 붉은 안개 + 아래쪽 어둠 */
+  --page-bg: radial-gradient(1200px 480px at 50% -200px, rgba(142, 23, 48, 0.2), transparent 70%), var(--bg);
+  /* 헤더 유리 */
+  --glass: color-mix(in srgb, var(--surface) 78%, transparent);
 
   /* 상태 */
-  --success: #276b4d;
-  --success-bg: #e3f3ea;
-  --warn: #8a5a12;
-  --warn-bg: #fdf4e3;
-  --danger: #b03e4a;
+  --success: #7fd1a1;
+  --success-bg: #10231a;
+  --warn: #e8b85a;
+  --warn-bg: #271c0d;
+  --danger: #ff8a9a;
 
-  /* 모서리 */
-  --radius-sm: 12px;
-  --radius: 16px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-2xl: 36px;
+  /* 그림자: 검정 + 핏빛 번짐, 마우스를 올리면 붉은 테두리가 은은히 */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6), var(--hairline);
+  --shadow: 0 18px 40px -20px rgba(142, 23, 48, 0.55), 0 0 0 1px rgba(220, 20, 60, 0.22);
+  --shadow-lg: 0 28px 64px -24px rgba(0, 0, 0, 0.9), 0 0 60px -22px rgba(142, 23, 48, 0.55), 0 0 0 1px rgba(220, 20, 60, 0.14);
+  --glow: 0 0 24px -6px rgba(220, 20, 60, 0.55);
+  --ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--brand);
+  --ring-soft: 0 0 0 4px color-mix(in srgb, var(--brand) 24%, transparent);
+}
+
+/* 라이트 "화이트 초콜릿": 아이보리에 브라운을 섞는다 — 면·선·칩·그림자 모두 코코아 톤 */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --brand: #5a3522; /* 다크 초콜릿 (배경 대비 8.8) */
+  --brand-ink: var(--brand);
+  --on-brand: #fff6ea; /* 10.0 */
+  --accent: #9c4a36; /* 캐러멜 코코아 (흰 글자 6.1) */
+  --accent-text: #8a3e2c; /* 6.2 */
+  --accent-strong: #7a3424;
+  --brand-soft: color-mix(in srgb, var(--brand) 9%, var(--surface));
+  --brand-soft-strong: color-mix(in srgb, var(--brand) 16%, var(--surface));
+  --accent-soft: color-mix(in srgb, var(--accent) 16%, var(--surface));
+
+  --text: #2b1c14; /* 13.5 */
+  --text-muted: #654f40; /* 6.3 */
+  --text-faint: #6b5444; /* 5.8 */
+
+  --bg: #f2e8d8;
+  --surface: #fff8ec;
+  --bg-soft: #f8f0e2;
+  --bg-muted: #e7d8c0;
+  --border: #dccab0;
+  --border-strong: #c4ab8a;
+  --surface-image: #fffaf2;
+  --chip-bg: rgba(255, 248, 236, 0.92);
+  --chip-fg: #2b1c14;
+  --overlay: rgba(43, 28, 20, 0.36);
+  --hairline: inset 0 0 0 1px rgba(90, 53, 34, 0.08);
+  --edge: inset 0 0 0 1px rgba(90, 53, 34, 0.12);
+  --btn-soft-bg: var(--brand-soft);
+  --btn-soft-bg-hover: var(--brand-soft-strong);
+  --btn-soft-fg: var(--brand-ink);
+  --control-bg: var(--surface);
+  --control-fg: var(--text-muted);
+
+  /* 서체 — 화이트 초콜릿: 명조 제목, 로고 블랙레터(EN 에서만) */
+  --font-display: var(--font-serif-kr, "Noto Serif KR"), "Nanum Myeongjo", "AppleMyungjo", serif;
+  --font-logo: var(--font-blackletter, "Pirata One"), var(--font-display);
+  --display-tracking: -0.02em;
+  --logo-glow: none;
+
+  /* 페이지 바탕: 위에서 퍼지는 코코아 빛 + 녹은 초콜릿 같은 아래 그늘 */
+  --page-bg: radial-gradient(1200px 480px at 50% -200px, rgba(156, 74, 54, 0.08), transparent 70%), var(--bg);
+  --glass: color-mix(in srgb, var(--surface) 82%, transparent);
+
+  --success: #2f6b48;
+  --success-bg: #e5eedf;
+  --warn: #7d5512;
+  --warn-bg: #f5e7cb;
+  --danger: #a33a44;
+
+  --shadow-sm: 0 1px 2px rgba(74, 44, 28, 0.06), 0 2px 8px -2px rgba(74, 44, 28, 0.1), var(--hairline);
+  --shadow: 0 1px 2px rgba(74, 44, 28, 0.06), 0 14px 34px -16px rgba(90, 53, 34, 0.32), 0 0 0 1px rgba(90, 53, 34, 0.1);
+  --shadow-lg: 0 2px 4px rgba(74, 44, 28, 0.06), 0 26px 58px -24px rgba(90, 53, 34, 0.38);
+  --glow: 0 0 0 1px rgba(90, 53, 34, 0.18);
+  --ring: 0 0 0 2px var(--bg), 0 0 0 4px var(--brand);
+  --ring-soft: 0 0 0 4px color-mix(in srgb, var(--brand) 20%, transparent);
+}
+
+/*
+ * 한국어 화면: 영문 글자도 한국 사용자에게 익숙한 한글 서체의 영문으로 (특이한 영문 서체는 EN 에서만)
+ * - 다크: 로고·제목 모두 검은고딕 (영문 포함)
+ * - 화이트 초콜릿: 로고도 제목과 같은 명조 (블랙레터는 EN 에서만)
+ */
+html:lang(ko):not([data-theme="light"]) {
+  --font-display: var(--font-blackhan, "Black Han Sans"), "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-logo: var(--font-blackhan, "Black Han Sans"), "Apple SD Gothic Neo", sans-serif;
+  --display-tracking: 0;
+}
+
+html:lang(ko)[data-theme="light"] {
+  --font-logo: var(--font-display);
+}
+
+:root {
+  /* 모서리: 각지지 않게, 고딕에 맞게 조금 단단하게 */
+  --radius-sm: 10px;
+  --radius: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 26px;
   --radius-full: 999px;
-
-  /* 그림자 (슬레이트 톤) */
-  --shadow-sm: 0 1px 2px rgba(38, 49, 58, 0.04), 0 2px 8px -2px rgba(38, 49, 58, 0.06);
-  --shadow: 0 1px 2px rgba(38, 49, 58, 0.04), 0 12px 32px -16px rgba(38, 49, 58, 0.16);
-  --shadow-lg: 0 2px 4px rgba(38, 49, 58, 0.04), 0 24px 56px -24px rgba(38, 49, 58, 0.24);
-  /* 포커스 링: 흰 틈 + 브랜드색 2px → 어떤 배경에서도 보이게 (WCAG 2.4.7 / 2.4.13) */
-  --ring: 0 0 0 2px var(--surface), 0 0 0 4px var(--brand);
-  --ring-soft: 0 0 0 4px color-mix(in srgb, var(--brand) 22%, transparent);
 
   /* 움직임 */
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -93,7 +199,6 @@
   --tap: 44px;
   --youtube-panel-width: 380px;
 
-  /* 서체: 영문·숫자는 끝이 둥근 Nunito(layout.tsx 에서 로드), 한글은 시스템 고딕 */
-  --font-family: var(--font-nunito, ui-rounded), "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR",
-    system-ui, sans-serif;
+  /* 서체 — 본문은 두 테마 모두 읽기 쉬운 고딕체. 제목·로고 서체는 테마별(위 각 테마 블록) */
+  --font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", system-ui, sans-serif;
 }

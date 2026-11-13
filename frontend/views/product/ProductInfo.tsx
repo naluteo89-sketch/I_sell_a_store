@@ -21,7 +21,7 @@ export default function ProductInfo({ product, canBuy }: { product: Product; can
       <div className={styles.text}>
         <div>
           {categoryName && <p className={styles.category}>{categoryName}</p>}
-          <h1 className={styles.name}>{product.name}</h1>
+          <h1 className={styles.name} data-font="plain">{product.name}</h1>
           <div className={styles.price}>
             <PriceRange product={product} size="lg" />
             {product.stock <= 0 && <Badge tone="accent">{t.product.soldOut}</Badge>}

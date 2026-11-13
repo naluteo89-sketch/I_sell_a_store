@@ -9,7 +9,7 @@
 }
 
 .review {
-  color: var(--brand);
+  color: var(--brand-ink);
   background: var(--brand-soft);
 }
 

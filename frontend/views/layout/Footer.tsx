@@ -7,7 +7,6 @@ import styles from "./Footer.module.css";
 
 export default function Footer({ brand }: { brand: Brand }) {
   const { t } = useI18n();
-  const support = t.footer.support(brand.phone, brand.email);
   return (
     <footer className={styles.footer}>
       <div className={styles.inner}>
@@ -21,10 +20,16 @@ export default function Footer({ brand }: { brand: Brand }) {
           <Link href="/community">{t.nav.community}</Link>
           <Link href="/orders">{t.nav.orders}</Link>
         </nav>
-        <div className={styles.meta}>
-          {support && <p>{support}</p>}
-          {brand.businessInfo && <p>{brand.businessInfo}</p>}
-        </div>
+        {/* 대표 · 연락 이메일 (전화번호는 설정했을 때만) */}
+        <p className={styles.meta}>
+          {[brand.businessInfo, brand.phone].filter(Boolean).join("  ·  ")}
+          {brand.email && (
+            <>
+              {(brand.businessInfo || brand.phone) && "  ·  "}
+              <a href={`mailto:${brand.email}`} className={styles.mail}>{brand.email}</a>
+            </>
+          )}
+        </p>
       </div>
     </footer>
   );

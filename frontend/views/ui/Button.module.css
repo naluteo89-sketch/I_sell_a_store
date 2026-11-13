@@ -24,10 +24,10 @@
 }
 
 /* 모양 */
+/* 주 버튼: 단색. 꾸밈 없이 */
 .primary {
   background: var(--brand);
   color: var(--on-brand);
-  box-shadow: 0 8px 20px -10px color-mix(in srgb, var(--brand) 70%, transparent);
 }
 .primary:hover:not(:disabled) {
   background: color-mix(in srgb, var(--brand) 88%, #000);
@@ -35,11 +35,12 @@
 
 /* 테두리 대신 옅은 브랜드 면 */
 .outline {
-  background: var(--brand-soft);
-  color: var(--brand);
+  background: var(--btn-soft-bg);
+  color: var(--btn-soft-fg);
+  box-shadow: var(--edge);
 }
 .outline:hover:not(:disabled) {
-  background: var(--brand-soft-strong);
+  background: var(--btn-soft-bg-hover);
 }
 
 .ghost {
@@ -63,7 +64,7 @@
 }
 .chip.active {
   background: var(--brand-soft);
-  color: var(--brand);
+  color: var(--brand-ink);
   box-shadow: inset 0 0 0 1.5px var(--brand);
 }
 

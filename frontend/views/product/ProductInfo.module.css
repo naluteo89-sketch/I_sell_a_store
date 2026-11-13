@@ -31,7 +31,7 @@
   padding: var(--space-1) var(--space-3);
   font-size: var(--font-xs);
   font-weight: 700;
-  color: var(--brand);
+  color: var(--brand-ink);
   border-radius: var(--radius-full);
   background: var(--brand-soft);
 }

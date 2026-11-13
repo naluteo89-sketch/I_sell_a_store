@@ -35,7 +35,7 @@ export default function VideoCollectionView({ collection }: { collection: VideoC
           )}
         </div>
         <div className={styles.info}>
-          <h1 className={styles.title}>{video.title ?? t.youtube.fallbackTitle}</h1>
+          <h1 className={styles.title} data-font="plain">{video.title ?? t.youtube.fallbackTitle}</h1>
           <p className={styles.channel}>
             <Link href={`/videos?q=${encodeURIComponent(video.channelTitle ?? "")}`} translate="no">
               {video.channelTitle}
@@ -53,7 +53,7 @@ export default function VideoCollectionView({ collection }: { collection: VideoC
 
       <section className={styles.products} aria-labelledby="in-video">
         <div className={styles.bar}>
-          <h2 id="in-video" className={styles.h2}>{t.videos.inThisVideo(products.length)}</h2>
+          <h2 id="in-video" className={styles.h2} data-font="plain">{t.videos.inThisVideo(products.length)}</h2>
           {b.eligible.length > 0 && (
             <div className={styles.bulk}>
               <label className={styles.selectAll}>

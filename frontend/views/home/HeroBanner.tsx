@@ -1,6 +1,7 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
 import { useI18n } from "@/controllers/useI18n";
+import FrameImg from "@/views/ui/FrameImg";
 import type { Product } from "@/models/types";
 import { ButtonLink } from "@/views/ui/Button";
 import styles from "./HeroBanner.module.css";
@@ -35,7 +36,7 @@ export default function HeroBanner({ title, tagline, products }: { title: string
           return (
             <div key={i} className={`${styles.tile} ${styles[`tile${i}`]}`}>
               {p?.imageUrl ? (
-                <img src={p.imageUrl} alt="" width={400} height={400} fetchPriority={i === 0 ? "high" : "auto"} decoding="async" />
+                <FrameImg url={p.imageUrl} alt="" width={400} height={400} fetchPriority={i === 0 ? "high" : "auto"} decoding="async" />
               ) : (
                 <span>{p?.name.slice(0, 1) ?? ""}</span>
               )}

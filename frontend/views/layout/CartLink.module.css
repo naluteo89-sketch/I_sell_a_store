@@ -29,7 +29,7 @@
   padding: 0 6px;
   font-size: var(--font-xs);
   font-weight: 800;
-  color: var(--brand);
+  color: var(--brand-ink);
   background: var(--surface);
   border-radius: var(--radius-full);
 }

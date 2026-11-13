@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useI18n } from "@/controllers/useI18n";
 import { useProductPurchase } from "@/controllers/useProductPurchase";
 import type { Product } from "@/models/types";
+import GimmeIcon from "@/views/gimme/GimmeIcon";
 import Button from "@/views/ui/Button";
 import QuantityStepper from "@/views/ui/QuantityStepper";
 import OptionSelector from "./OptionSelector";
@@ -59,8 +60,10 @@ export default function PurchasePanel({ product }: { product: Product }) {
       </div>
 
       <div className={styles.actions}>
-        <Button variant="outline" size="lg" full disabled={c.soldOut} onClick={() => run(c.addToCart)}>
-          {c.added ? t.product.added : t.product.addToCart}
+        <Button variant="outline" size="lg" full disabled={c.soldOut} onClick={() => run(c.addToCart)}
+          data-gimme-host="" aria-label={c.added ? undefined : t.product.gimmeCart}>
+          <GimmeIcon />
+          {c.added ? t.product.added : t.product.gimme}
         </Button>
         <Button size="lg" full disabled={c.soldOut} onClick={() => run(c.buyNow)}>
           {c.soldOut ? t.product.soldOut : t.product.buyNow}

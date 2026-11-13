@@ -1,0 +1,46 @@
+.toggle {
+  display: inline-flex;
+  flex-shrink: 0;
+  gap: 2px;
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: var(--control-bg);
+  box-shadow: var(--edge);
+}
+
+.option,
+.active {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  height: 36px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-sm);
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  transition:
+    background-color var(--duration) var(--ease),
+    color var(--duration) var(--ease),
+    box-shadow var(--duration) var(--ease);
+}
+
+.option {
+  color: var(--control-fg);
+}
+
+.option:hover {
+  color: var(--text);
+}
+
+.active {
+  color: var(--brand-ink);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+@media (pointer: coarse) {
+  .option,
+  .active {
+    height: 40px;
+  }
+}

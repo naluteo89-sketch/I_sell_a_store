@@ -35,13 +35,28 @@ public class VideoCollectionService {
      */
     @Transactional(readOnly = true)
     public List<VideoCollection> list(Market market, int minProducts, int limit, String sort, String q) {
+        return page(market, null, minProducts, 1, limit, sort, q).items();
+    }
+
+    /**
+     * 영상 묶음 한 페이지 (상품 목록의 "영상별 보기").
+     * @param category 이 카테고리 상품만 세어 묶음 (null 이면 전체)
+     * @param q 영상 제목·유튜버 이름 + 상품명
+     */
+    @Transactional(readOnly = true)
+    public CatalogPage<VideoCollection> page(Market market, String category, int minProducts, int page, int size, String sort, String q) {
+        boolean byCategory = category != null && !category.isBlank();
         String like = CatalogSql.likeOrNull(q);
+        int pageNo = Math.max(1, page);
+        int pageSize = CatalogSql.clamp(size, 1, MAX_LIMIT);
         MapSqlParameterSource params = CatalogSql.params(market)
+                .addValue("category", byCategory ? category : null)
                 .addValue("min", Math.max(1, minProducts))
-                .addValue("limit", CatalogSql.clamp(limit, 1, MAX_LIMIT))
+                .addValue("limit", pageSize)
+                .addValue("offset", (pageNo - 1) * pageSize)
                 .addValue("q", like);
 
-        String sql = """
+        String grouped = """
                 SELECT y.video_id, y.title, y.channel_title, y.thumbnail_url, y.view_count,
                        COALESCE(MAX(ch.channel_views), 0) AS channel_views,
                        COUNT(*) AS product_count, MAX(b.created_at) AS latest
@@ -50,21 +65,22 @@ public class VideoCollectionService {
                   LEFT JOIN %s ch ON ch.channel_title = y.channel_title
                  %s
                  GROUP BY y.video_id, y.title, y.channel_title, y.thumbnail_url, y.view_count
-                HAVING COUNT(*) >= :min
-                 ORDER BY %s
-                 LIMIT :limit""".formatted(
-                CatalogSql.products(false), CatalogSql.CHANNEL_STATS,
-                like == null ? "" : "WHERE (LOWER(y.title) LIKE :q ESCAPE '!' OR LOWER(y.channel_title) LIKE :q ESCAPE '!')",
-                orderBy(sort));
+                HAVING COUNT(*) >= :min""".formatted(
+                CatalogSql.products(byCategory), CatalogSql.CHANNEL_STATS,
+                like == null ? "" : "WHERE (LOWER(y.title) LIKE :q ESCAPE '!' OR LOWER(y.channel_title) LIKE :q ESCAPE '!'"
+                        + " OR LOWER(b.name) LIKE :q ESCAPE '!' OR LOWER(b.name_en) LIKE :q ESCAPE '!')");
 
-        List<VideoSummary> videos = jdbc.query(sql, params, (rs, i) -> new VideoSummary(
-                rs.getString("video_id"), rs.getString("title"), rs.getString("channel_title"),
-                rs.getString("thumbnail_url"), rs.getLong("view_count"), rs.getLong("channel_views"),
-                rs.getInt("product_count")));
-        if (videos.isEmpty()) return List.of();
+        Long total = jdbc.queryForObject("SELECT COUNT(*) FROM (" + grouped + ") g", params, Long.class);
+        if (total == null || total == 0) return new CatalogPage<>(List.of(), 0, pageNo, pageSize);
+
+        List<VideoSummary> videos = jdbc.query(grouped + " ORDER BY " + orderBy(sort) + " LIMIT :limit OFFSET :offset", params,
+                (rs, i) -> new VideoSummary(
+                        rs.getString("video_id"), rs.getString("title"), rs.getString("channel_title"),
+                        rs.getString("thumbnail_url"), rs.getLong("view_count"), rs.getLong("channel_views"),
+                        rs.getInt("product_count")));
 
         Map<String, List<Long>> idsByVideo = productIds(market, videos.stream().map(VideoSummary::videoId).toList(), PREVIEW);
-        return assemble(videos, idsByVideo, market);
+        return new CatalogPage<>(assemble(videos, idsByVideo, market), total, pageNo, pageSize);
     }
 
     /** 영상 하나의 상품 전부. 이 시장에 노출되는 상품이 없으면 404 */
@@ -120,6 +136,7 @@ public class VideoCollectionService {
     static String orderBy(String sort) {
         return switch (sort == null ? "views" : sort) {
             case "channelViews" -> "channel_views DESC, y.view_count DESC";
+            case "videoViews" -> "y.view_count DESC";
             case "new" -> "latest DESC";
             default -> "y.view_count DESC";
         };

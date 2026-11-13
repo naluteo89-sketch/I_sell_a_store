@@ -24,14 +24,14 @@
 }
 
 .item.active {
-  color: var(--brand);
+  color: var(--brand-ink);
   background: var(--brand-soft);
 }
 
 .mobile {
   display: flex;
   gap: var(--space-2);
-  max-width: calc(var(--max-width) - var(--space-8));
+  max-width: 1440px;
   margin: var(--space-3) auto 0;
   padding: 0 var(--space-1) var(--space-2);
   overflow-x: auto;
@@ -54,7 +54,8 @@
   color: var(--on-brand);
 }
 
-@media (min-width: 1100px) {
+/* 헤더 안 카테고리는 아주 넓은 화면에서만 — 그 아래에선 헤더 밑 줄로 내려가 검색창 자리를 비운다 */
+@media (min-width: 1440px) {
   .desktop {
     display: flex;
   }

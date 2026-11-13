@@ -44,7 +44,7 @@
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-6);
   font-size: var(--font-sm);
   font-weight: 600;
-  color: #fff;
+  color: var(--bg);
   border-radius: var(--radius-full);
   background: var(--text);
   box-shadow: var(--shadow-lg);
@@ -57,7 +57,7 @@
   font-weight: 800;
   color: var(--text);
   border-radius: var(--radius-full);
-  background: #fff;
+  background: var(--surface-image);
 }
 
 @keyframes rise {

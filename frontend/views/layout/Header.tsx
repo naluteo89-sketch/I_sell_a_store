@@ -2,16 +2,18 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { useI18n } from "@/controllers/useI18n";
+import type { ThemeMode } from "@/lib/themeMode";
 import type { Category, Site } from "@/models/types";
 import AccountLink from "./AccountLink";
 import CartLink from "./CartLink";
 import CategoryNav from "./CategoryNav";
 import LanguageSwitcher from "./LanguageSwitcher";
 import SearchBox from "./SearchBox";
+import ThemeToggle from "./ThemeToggle";
 import styles from "./Header.module.css";
 
 /** 화면 위에 떠 있는 둥근 캡슐 헤더 */
-export default function Header({ site, categories }: { site: Site; categories: Category[] }) {
+export default function Header({ site, categories, theme }: { site: Site; categories: Category[]; theme: ThemeMode }) {
   const { brand, features } = site;
   const { t } = useI18n();
   return (
@@ -34,6 +36,7 @@ export default function Header({ site, categories }: { site: Site; categories: C
           </Link>
         </nav>
         <LanguageSwitcher />
+        <ThemeToggle initial={theme} />
         <AccountLink />
         {features.cart && <CartLink />}
       </div>

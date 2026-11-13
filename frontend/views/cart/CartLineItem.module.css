@@ -28,7 +28,7 @@
 }
 
 .name:hover {
-  color: var(--brand);
+  color: var(--brand-ink);
 }
 
 .sub {

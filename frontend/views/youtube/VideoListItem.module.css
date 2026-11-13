@@ -54,8 +54,8 @@
   height: 26px;
   padding-left: 1px;
   border-radius: 50%;
-  color: var(--text);
-  background: rgba(255, 255, 255, 0.92);
+  color: var(--chip-fg);
+  background: var(--chip-bg);
   box-shadow: var(--shadow-sm);
 }
 
@@ -130,7 +130,7 @@
   min-height: 28px;
   font-size: var(--font-xs);
   font-weight: 700;
-  color: var(--brand);
+  color: var(--brand-ink);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -162,7 +162,7 @@
 }
 
 .playingLabel {
-  color: var(--brand);
+  color: var(--brand-ink);
   background: var(--surface);
   cursor: default;
 }

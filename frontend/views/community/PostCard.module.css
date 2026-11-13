@@ -53,7 +53,7 @@
   height: 88px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: #fff;
+  background: var(--surface-image);
 }
 
 .thumb img {

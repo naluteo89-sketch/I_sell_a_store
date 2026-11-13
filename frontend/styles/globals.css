@@ -12,7 +12,6 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
-  color-scheme: light;
   /* 떠 있는 헤더가 키보드 포커스·앵커 대상을 가리지 않게 (WCAG 2.4.11) */
   scroll-padding-top: calc(var(--header-height) + var(--header-offset) * 2 + var(--space-4));
 }
@@ -22,7 +21,8 @@ body {
   font-family: var(--font-family);
   font-size: var(--font-base);
   color: var(--text);
-  background: var(--bg);
+  background: var(--page-bg);
+  background-attachment: fixed;
   line-height: 1.6;
   letter-spacing: -0.005em;
   word-break: keep-all;
@@ -35,6 +35,13 @@ h2,
 h3 {
   line-height: 1.25;
   letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+/* 특별한 서체는 페이지 큰 제목(h1)에만 — 나머지는 절제된 보통 서체 */
+h1 {
+  font-family: var(--font-display);
+  letter-spacing: var(--display-tracking);
   text-wrap: balance;
 }
 
@@ -160,4 +167,46 @@ main:focus {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* 시트(모달)가 열려 있는 동안 뒤 페이지가 스크롤되지 않게 */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+/* 선택 영역·스크롤바도 테마 색으로 */
+::selection {
+  color: var(--on-brand);
+  background: var(--brand);
+}
+
+* {
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+/* 테마를 바꿀 때 한순간에 확 바뀌지 않게 (움직임 줄이기 설정이면 즉시) */
+@media (prefers-reduced-motion: no-preference) {
+  html.theme-switching,
+  html.theme-switching * {
+    transition:
+      background-color 360ms var(--ease),
+      color 360ms var(--ease),
+      border-color 360ms var(--ease),
+      box-shadow 360ms var(--ease) !important;
+  }
+}
+
+/* 다크 제목 서체(Anton·검은고딕)는 굵기가 하나뿐 → 브라우저가 가짜 굵게를 만들지 않게 */
+[data-theme="dark"] h1:not([data-font="plain"]) {
+  font-weight: 400 !important;
+  font-synthesis: none;
+}
+
+/*
+ * 상품 이름·상품 소개·영상 제목처럼 "읽는" 글은 꾸밈 없는 보통 서체로 (두 테마·두 언어 공통)
+ * 특별한 서체는 로고와 페이지·섹션 제목에만 쓴다
+ */
+[data-font="plain"] {
+  font-family: var(--font-family) !important;
+  letter-spacing: -0.01em !important;
 }
